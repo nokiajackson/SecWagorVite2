@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35201.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecWagorVite.Server", "SecWagorVite.Server\SecWagorVite.Server.csproj", "{D9660BE0-FFE5-416B-AF2D-5F403844DB56}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "secwagorvite.client", "secwagorvite.client\secwagorvite.client.esproj", "{CCBBCB86-3034-4DAB-A3E5-A93D2AC1980A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9660BE0-FFE5-416B-AF2D-5F403844DB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9660BE0-FFE5-416B-AF2D-5F403844DB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9660BE0-FFE5-416B-AF2D-5F403844DB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9660BE0-FFE5-416B-AF2D-5F403844DB56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCBBCB86-3034-4DAB-A3E5-A93D2AC1980A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCBBCB86-3034-4DAB-A3E5-A93D2AC1980A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCBBCB86-3034-4DAB-A3E5-A93D2AC1980A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CCBBCB86-3034-4DAB-A3E5-A93D2AC1980A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCBBCB86-3034-4DAB-A3E5-A93D2AC1980A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCBBCB86-3034-4DAB-A3E5-A93D2AC1980A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E454D2B-1C0E-4AF6-B7F7-EDDDE0454328}
+	EndGlobalSection
+EndGlobal
