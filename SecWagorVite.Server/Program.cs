@@ -32,6 +32,10 @@ builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken"; // 組態防偽令牌的要求標頭名稱
+});
 builder.Services.AddControllers();
 
 builder.Services.AddMvc();

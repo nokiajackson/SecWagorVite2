@@ -1,104 +1,115 @@
 <template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <div>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" v-model="datas.username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          v-model="datas.password"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="campusDropdown">Campus</label>
-        <select class="form-control" id="campusDropdown" v-model="datas.campus">
-          <option v-for="campus in campuses" :key="campus" :value="campus.id">
-            {{ campus.campusName }}
-          </option>
-        </select>
-      </div>
-      <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
-      <div class="form-group">
-        <button type="button" @click="login">Login</button>
-      </div>
+    <div class="login-container">
+        <h2>Login</h2>
+        <div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" v-model="datas.username" required />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password"
+                       id="password"
+                       v-model="datas.password"
+                       required />
+            </div>
+            <div class="form-group">
+                <label for="campusDropdown">Campus</label>
+                <select class="form-control" id="campusDropdown" v-model="datas.campus">
+                    <option v-for="campus in campuses" :key="campus" :value="campus.id">
+                        {{ campus.campusName }}
+                    </option>
+                </select>
+            </div>
+            <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
+            <div class="form-group">
+                <button type="button" @click="login">Login</button>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 
-export default {
-  data() {
-    return {
-      datas: {
-        username: "",
-        password: "",
-        campus: 1,
-      },
-      campuses: [],
-      errorMessage: "",
-      token:null,
-    };
-  },
-  mounted() {
-    this.getCampuses();
-  },
-  methods: {
-    getCampuses() {
-        this.$apiClient.get('/Api/Account/GetAllCampuses')
-        .then((res) => {
-            this.campuses = res.data;
-        })
-        .catch((error) => {
-            console.error('Error fetching campuses:', error);
-        });
-    },
-    login() {
-      if (
-        this.datas.username === "" ||
-        this.datas.password === "" ||
-        this.datas.campus === ""
-      ) {
-        this.errorMessage = "Please fill in all fields.";
-      } else {
-        this.errorMessage = "";
-        // const csrfToken = document.querySelector(
-        //   '[name="__RequestVerificationToken"]'
-        // ).value;
-console.log(this.getAntiForgeryToken());
-
-        this.$apiClient
-          .post("/Api/Account/Login", this.datas, {
-            headers: {
-              "Content-Type": "application/json",
-              RequestVerificationToken: this.getAntiForgeryToken(),
+    export default {
+        data() {
+            return {
+                datas: {
+                    username: "",
+                    password: "",
+                    campus: 1,
+                },
+                campuses: [],
+                errorMessage: "",
+                token: null,
+            };
+        },
+        mounted() {
+            this.getCampuses();
+        },
+        methods: {
+            getCampuses() {
+                this.$apiClient.get('/Api/Account/GetAllCampuses')
+                    .then((res) => {
+                        this.campuses = res.data;
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching campuses:', error);
+                    });
             },
-          })
-          .then((response) => {
-            if (response.status === 200) {
-              window.location.href = "/Home/EntryRecord";
-            } else {
-              this.errorMessage = "Invalid credentials.";
+            login() {
+                if (
+                    this.datas.username === "" ||
+                    this.datas.password === "" ||
+                    this.datas.campus === ""
+                ) {
+                    this.errorMessage = "Please fill in all fields.";
+                } else {
+                    this.errorMessage = "";
+
+                    this.axios({
+                        url: '/Api/Account/Login',
+                        method: 'post',
+                        headers: {
+                           'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: qs.stringify(this.datas)
+                    })
+                    /*
+                    this.getAntiForgeryToken()
+                        .then((csrfToken) => {
+                            return this.$apiClient.post("/Api/Account/Login", this.datas, {
+                                headers: {
+                                    "Content-Type": 'application/x-www-form-urlencoded',
+                                    "RequestVerificationToken": csrfToken, // 將防偽令牌加入要求標頭
+                                },
+                                withCredentials: true, // 允許傳送cookie和防偽令牌
+                            });
+                        })
+                        .then((response) => {
+                            if (response.status === 200) {
+                                window.location.href = "/Home/EntryRecord";
+                            } else {
+                                this.errorMessage = "Invalid credentials.";
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error logging in:", error);
+                            if (error.response && error.response.status === 400) {
+                                this.errorMessage = "Bad request. Please check your input.";
+                            } else {
+                                this.errorMessage = "Error logging in.";
+                            }
+                        });
+                        */
+                }
+            },
+            async getAntiForgeryToken() {
+                const response = await this.$apiClient.get('/Api/Account/GetAntiForgeryToken');
+                return response.data.token;
             }
-          })
-          .catch((error) => {
-            console.error("Error logging in:", error);
-            this.errorMessage = "Error logging in.";
-          });
-      }
-    },
-    async getAntiForgeryToken() {
-      const response =  await this.$apiClient.get('/Api/Account/GetAntiForgeryToken');
-      return response.data.token;
-    }
-  },
-};
+        },
+    };
 </script>
 
 <style>
