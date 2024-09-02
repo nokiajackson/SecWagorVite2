@@ -3,26 +3,24 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/main.css'
-//import Login from './components/Login.vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios'
+import qs from 'qs';
+
+async function getAntiForgeryToken() {
+    const response = await axios.get('/Api/Account/antiforgery-token');
+    return response.data.token;
+}
+
 
 const app = createApp(App);
 app.use(VueAxios, axios)
 
-// 將 apiClient 掛載到全域屬性上
-console.log(import.meta.env.VITE_API_BASE_URL);
+app.config.globalProperties.$qs = qs;
 
-const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
-    timeout: parseInt(import.meta.env.VITE_AXIOS_TIMEOUT) || 1000,
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Custom-Header': 'foobar'
-    }
+getAntiForgeryToken().then(token => {
+    app.config.globalProperties.$antiForgeryToken = token;
+    app.use(router);
+    app.mount('#app');
 });
 
-app.config.globalProperties.$apiClient = apiClient;
-
-app.use(router);
-app.mount('#app');

@@ -30,6 +30,7 @@
 </template>
 
 <script>
+    import $axios from '@/apiClient'; 
 
     export default {
         data() {
@@ -49,7 +50,7 @@
         },
         methods: {
             getCampuses() {
-                this.$apiClient.get('/Api/Account/GetAllCampuses')
+                $axios.get('/Api/Account/GetAllCampuses')
                     .then((res) => {
                         this.campuses = res.data;
                     })
@@ -67,18 +68,15 @@
                 } else {
                     this.errorMessage = "";
 
-                    this.axios({
-                        url: '/Api/Account/Login',
-                        method: 'post',
+                    $axios.post("/Api/Account/Login", this.datas, {
                         headers: {
-                           'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        data: qs.stringify(this.datas)
+                            'RequestVerificationToken': this.$antiForgeryToken
+                        }
                     })
                     /*
                     this.getAntiForgeryToken()
                         .then((csrfToken) => {
-                            return this.$apiClient.post("/Api/Account/Login", this.datas, {
+                            return $axios.post("/Api/Account/Login", this.datas, {
                                 headers: {
                                     "Content-Type": 'application/x-www-form-urlencoded',
                                     "RequestVerificationToken": csrfToken, // 將防偽令牌加入要求標頭
@@ -104,10 +102,7 @@
                         */
                 }
             },
-            async getAntiForgeryToken() {
-                const response = await this.$apiClient.get('/Api/Account/GetAntiForgeryToken');
-                return response.data.token;
-            }
+            
         },
     };
 </script>

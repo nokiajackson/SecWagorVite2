@@ -33,7 +33,7 @@ public class AccountController : Controller
         _antiforgery = antiforgery;
     }
 
-    [HttpGet("GetAntiForgeryToken")]
+    [HttpGet("antiforgery-token")]
     public IActionResult GetAntiForgeryToken()
     {
         var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
@@ -82,7 +82,6 @@ public class AccountController : Controller
     }
 
     [HttpPost("login")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginModelVM model)
     {
         // 驗證用戶名和密碼
