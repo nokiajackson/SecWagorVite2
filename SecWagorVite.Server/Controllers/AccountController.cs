@@ -12,8 +12,7 @@ using System.Data.Entity.Infrastructure;
 using Microsoft.AspNetCore.Antiforgery;
 
 
-[Route("Api/[controller]")]
-[ApiController]
+[Route("api/[controller]")]
 public class AccountController : Controller
 {
     private readonly AccountService _accountService;
@@ -33,18 +32,13 @@ public class AccountController : Controller
         _antiforgery = antiforgery;
     }
 
-    [HttpGet("antiforgery-token")]
-    public IActionResult GetAntiForgeryToken()
-    {
-        var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
-        return Ok(new { token = tokens.RequestToken });
-    }
+    
     /// <summary>
     /// Get all campuses.
     /// </summary>
     /// <returns>A list of all campuses.</returns>
     [HttpGet("GetAllCampuses")]
-    [ProducesResponseType(typeof(List<Campus>), 200)]
+    //[ProducesResponseType(typeof(List<Campus>), 200)]
     public IActionResult GetAllCampuses()
     {
         var campuses = _commonService.GetAllCampus();
@@ -81,7 +75,14 @@ public class AccountController : Controller
         return Task.FromResult<IActionResult>(Ok(account));
     }
 
+    [HttpGet("GetAntiForgeryToken")]
+    public IActionResult GetAntiForgeryToken()
+    {
+        var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
+        return Ok(new { token = tokens.RequestToken });
+    }
     [HttpPost("login")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginModelVM model)
     {
         // 驗證用戶名和密碼

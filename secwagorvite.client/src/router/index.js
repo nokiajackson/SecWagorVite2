@@ -4,6 +4,7 @@ import MainLayout from '@/components/MainLayout.vue';
 import EntryRecordBefore from '@/components/EntryRecordBefore.vue';
 import EntryRecordAfter from '@/components/EntryRecordAfter.vue';
 import HelloWorld from '@/components/HelloWorld.vue';
+import { useAuth } from '@/composables/useAuth'; // 自訂的認證處理
 
 const routes = [
   {
@@ -44,4 +45,14 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+    const auth = useAuth();
+    const isAuthenticated = auth.isAuthenticated();
+
+    if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+        next('/login');
+    } else {
+        next();
+    }
+});
 export default router;

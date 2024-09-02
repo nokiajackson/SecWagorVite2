@@ -31,6 +31,7 @@
 
 <script>
     import $axios from '@/apiClient'; 
+    import { useRouter } from 'vue-router';
 
     export default {
         data() {
@@ -50,7 +51,7 @@
         },
         methods: {
             getCampuses() {
-                $axios.get('/Api/Account/GetAllCampuses')
+                $axios.get('/api/Account/GetAllCampuses')
                     .then((res) => {
                         this.campuses = res.data;
                     })
@@ -59,6 +60,8 @@
                     });
             },
             login() {
+                const router = useRouter();
+
                 if (
                     this.datas.username === "" ||
                     this.datas.password === "" ||
@@ -68,38 +71,14 @@
                 } else {
                     this.errorMessage = "";
 
-                    $axios.post("/Api/Account/Login", this.datas, {
+                    const res = $axios.post("/api/Account/Login", this.datas, {
                         headers: {
                             'RequestVerificationToken': this.$antiForgeryToken
                         }
                     })
-                    /*
-                    this.getAntiForgeryToken()
-                        .then((csrfToken) => {
-                            return $axios.post("/Api/Account/Login", this.datas, {
-                                headers: {
-                                    "Content-Type": 'application/x-www-form-urlencoded',
-                                    "RequestVerificationToken": csrfToken, // 將防偽令牌加入要求標頭
-                                },
-                                withCredentials: true, // 允許傳送cookie和防偽令牌
-                            });
-                        })
-                        .then((response) => {
-                            if (response.status === 200) {
-                                window.location.href = "/Home/EntryRecord";
-                            } else {
-                                this.errorMessage = "Invalid credentials.";
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("Error logging in:", error);
-                            if (error.response && error.response.status === 400) {
-                                this.errorMessage = "Bad request. Please check your input.";
-                            } else {
-                                this.errorMessage = "Error logging in.";
-                            }
-                        });
-                        */
+                    if (res.data) {
+                        router.push('/dashboard'); // 或其他需要跳轉的路由
+                    }
                 }
             },
             
