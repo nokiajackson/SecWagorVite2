@@ -10,7 +10,6 @@ import qs from 'qs';
 
 async function getAntiForgeryToken() {
     const response = await $axios.get('/api/Account/GetAntiForgeryToken');
-    console.log(response);
     return response.data.token;
 }
 
