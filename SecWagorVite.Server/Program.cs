@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecWagorVite.Server.Models;
 using SecWagorVite.Server.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "https://localhost:5173"; // Default value
+var frontendUrl = builder.Environment.IsDevelopment()
+    ? Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "https://localhost:5173"  // 開發環境默認使用 localhost
+    : Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://http://192.168.0.66:8050/"; // 發佈環境使用生產URL
 
 builder.Services.AddCors(options =>
 {
@@ -38,8 +41,10 @@ builder.Services.AddAntiforgery(options =>
 });
 builder.Services.AddControllers();
 
-builder.Services.AddMvc();
+builder.Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);;
 builder.Services.AddHttpContextAccessor();
+
+
 // Configuration
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("SecWagoreContext");
@@ -83,21 +88,22 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    //app.UseSwaggerUI();
-//    app.UseSwaggerUI(c =>
-//    {
-//        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-//    });
-//}
-
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-});
+    app.UseSwagger();
+    //app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+    });
+}
+
+
+//app.UseSwagger();
+//app.UseSwaggerUI(c =>
+//{
+//    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+//});
 
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");

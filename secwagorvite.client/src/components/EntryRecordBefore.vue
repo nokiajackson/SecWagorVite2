@@ -12,4 +12,5 @@ import SupportIcon from './icons/IconSupport.vue'
   <EcosystemIcon />
   <CommunityIcon />
   <SupportIcon />
+    BB
 </template>

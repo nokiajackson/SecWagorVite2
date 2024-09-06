@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Antiforgery;
 
 
 [Route("api/[controller]")]
+[ApiController]
 public class AccountController : Controller
 {
     private readonly AccountService _accountService;

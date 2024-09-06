@@ -1,6 +1,7 @@
 ﻿// apiClient.js
 import axios from 'axios';
 
+console.log(import.meta.env.VITE_API_BASE_URL)
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
     timeout: parseInt(import.meta.env.VITE_AXIOS_TIMEOUT) || 1000,
