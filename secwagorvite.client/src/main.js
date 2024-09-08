@@ -8,6 +8,9 @@ import $axios from '@/apiClient';
 import VueAxios from 'vue-axios'
 import qs from 'qs';
 
+
+
+
 async function getAntiForgeryToken() {
     const response = await $axios.get('/api/Account/GetAntiForgeryToken');
     return response.data.token;

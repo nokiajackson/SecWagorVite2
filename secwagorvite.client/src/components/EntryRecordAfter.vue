@@ -3,27 +3,28 @@
         <div class="row">
             <!-- Left Column -->
             <div class="col-md-4">
-                <div class="form-group" v-if="!userIsAuthenticated">
-                    <label class="form-label">®Õ°Ï</label>
+                <div class="form-group">
+                    <label class="form-label">æ ¡å€</label>
+                    v-if="!userIsAuthenticated"
                     <select class="form-select" v-model="datas.campusId">
-                        <option :value="null">½Ğ¿ï¾Ü®Õ°Ï</option>
+                        <option :value="null">è«‹é¸æ“‡æ ¡å€</option>
                         <option v-for="campus in campuses" :value="campus.id">{{ campus.campusName }}</option>
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">©m¦W</label>
+                    <label class="form-label">å§“å</label>
                     <input type="text" class="form-control" v-model="datas.fullName">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">¹q¸Ü</label>
+                    <label class="form-label">é›»è©±</label>
                     <input type="text" class="form-control" v-model="$data.datas.phoneNumber">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">¤H¼Æ</label>
+                    <label class="form-label">äººæ•¸</label>
                     <input type="number" class="form-control" v-model.number="datas.numberOfPeople">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">¨ü³X¤H</label>
+                    <label class="form-label">å—è¨ªäºº</label>
                     <input type="text" class="form-control" v-model="datas.interviewee">
                 </div>
             </div>
@@ -31,33 +32,35 @@
             <!-- Right Column -->
             <div class="col-md-8">
                 <div class="mb-3">
-                    <label class="form-label">¨Æ¥Ñ : </label>
-                    ³o¸Ì­n foreach PurposeOptions
-                    <label class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" v-model="datas.purpose" :value="option.Key">
-                        <span class="form-check-label" for="reason1">option.Name</span>
+                    <label class="form-label">äº‹ç”± : </label>
+                    é€™è£¡è¦ 
+                    <label class="form-check form-check-inline"
+                           v-for="option in enums.purposes" :key="option.Key">
+                        <input class="form-check-input" type="radio" v-model="datas.purpose"  :value="option.key">
+                        <span class="form-check-label">{{option.name}}</span>
                     </label>
 
                     <div class="form-check form-check-inline col">
-                        <input type="text" class="form-control" v-model="datas.otherDescription" placeholder="¨ä¥L»¡©ú">
+                        <input type="text" class="form-control" v-model="datas.otherDescription" placeholder="å…¶ä»–èªªæ˜">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">³Æµù</label>
+                    <label class="form-label">å‚™è¨»</label>
                     <textarea class="form-control" v-model="datas.note" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">´«ÃÒ¸¹½X</label>
+                    <label class="form-label">æ›è­‰è™Ÿç¢¼</label>
                     <input type="text" class="form-control" v-model="datas.replacementNumber">
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
-                        <label for="entryTime" class="form-label">¤J®Õ¤é´Á</label>
-                        <input type="text" class="form-control" id="entryTime" v-model="entryTime" v-on:change="combineEntryTime">
-                        <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTime">±a¤J²{¦b®É¶¡</button>
+                        <label for="entryTime" class="form-label">å…¥æ ¡æ—¥æœŸ</label>
+                        <Datepicker class="form-control" v-model="entryTime" :format="'yyyy-MM-dd'" />
+
+                        <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTime">å¸¶å…¥ç¾åœ¨æ™‚é–“</button>
                     </div>
                     <div class="col-4">
-                        <label for="entryTime" class="form-label">¤J®Õ®É¶¡</label>
+                        <label for="entryTime" class="form-label">å…¥æ ¡æ™‚é–“</label>
                         <div class="input-group">
                             <input type="number" class="form-control"
                                    v-model.number="entryHour" v-on:change="combineEntryTime">
@@ -67,46 +70,46 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" v-on:click="submitForm"> °e¥X</button>
+            <button type="button" class="btn btn-primary" v-on:click="submitForm"> é€å‡º</button>
         </div>
     </form>
     <div class="row">
         <table class="table table-striped border mt-2" v-if="userIsAuthenticated">
             <thead>
                 <tr>
-                    <th>©m¦W</th>
-                    <th>¹q¸Ü</th>
-                    <th>¤H¼Æ</th>
-                    <th>¨ü³X¤H</th>
-                    <th>¨Æ¥Ñ</th>
-                    <th>³Æµù</th>
-                    <th>´«ÃÒ¸¹½X</th>
-                    <th>¤J®Õ®É¶¡</th>
-                    <th>Â÷®Õ®É¶¡</th>
+                    <th>å§“å</th>
+                    <th>é›»è©±</th>
+                    <th>äººæ•¸</th>
+                    <th>å—è¨ªäºº</th>
+                    <th>äº‹ç”±</th>
+                    <th>å‚™è¨»</th>
+                    <th>æ›è­‰è™Ÿç¢¼</th>
+                    <th>å…¥æ ¡æ™‚é–“</th>
+                    <th>é›¢æ ¡æ™‚é–“</th>
                 </tr>
             </thead>
             <!--<tbody>
-                <tr v-for="log in entryLogs" :key="log.id">
-                    <td>{{ log.fullName }}</td>
-                    <td>{{ log.phoneNumber }}</td>
-                    <td class="text-center">{{ log.numberOfPeople }}</td>
-                    <td>{{ log.interviewee }}</td>
-                    <td>{{ findPurpose(log.purpose) }}</td>
-                    <td>{{ log.note }}</td>
-                    <td>{{ log.replacementNumber }}</td>
-                    <td>
-                        <b>{{ formatDate(log.entryTime) }}</b>
-                    </td>
-                    <td>
-                        <b v-if="log.exitTime">
-                            {{ formatDate(log.exitTime) }}
-                        </b>
-                        <button type="bottom" class="btn btn-danger text-white" v-else v-on:click="setExitDate(log)">
-                            ¬ö¿ıÂ÷®Õ®É¶¡
-                        </button>
-                    </td>
-                </tr>
-            </tbody>-->
+        <tr v-for="log in entryLogs" :key="log.id">
+            <td>{{ log.fullName }}</td>
+            <td>{{ log.phoneNumber }}</td>
+            <td class="text-center">{{ log.numberOfPeople }}</td>
+            <td>{{ log.interviewee }}</td>
+            <td>{{ findPurpose(log.purpose) }}</td>
+            <td>{{ log.note }}</td>
+            <td>{{ log.replacementNumber }}</td>
+            <td>
+                <b>{{ formatDate(log.entryTime) }}</b>
+            </td>
+            <td>
+                <b v-if="log.exitTime">
+                    {{ formatDate(log.exitTime) }}
+                </b>
+                <button type="bottom" class="btn btn-danger text-white" v-else v-on:click="setExitDate(log)">
+                    ç´€éŒ„é›¢æ ¡æ™‚é–“
+                </button>
+            </td>
+        </tr>
+    </tbody>-->
         </table>
         <pre>{{entryLogs}}</pre>
     </div>
@@ -114,18 +117,18 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="setExitDateDiaglogLabel">Â÷®Õ®É¶¡</h1>
+                    <h1 class="modal-title fs-5" id="setExitDateDiaglogLabel">é›¢æ ¡æ™‚é–“</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label for="exitTime" class="form-label">Â÷®Õ¤é´Á</label>
+                            <label for="exitTime" class="form-label">é›¢æ ¡æ—¥æœŸ</label>
                             <input type="text" class="form-control" id="exitTime" v-model="exitTime" v-on:change="combineExitTime">
-                            <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTimeToExitTime">±a¤J²{¦b®É¶¡</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTimeToExitTime">å¸¶å…¥ç¾åœ¨æ™‚é–“</button>
                         </div>
                         <div class="col-4">
-                            <label for="exitTime" class="form-label">Â÷®Õ®É¶¡</label>
+                            <label for="exitTime" class="form-label">é›¢æ ¡æ™‚é–“</label>
                             <div class="input-group">
                                 <input type="number" class="form-control"
                                        v-model.number="exitHour" v-on:change="combineExitTime">
@@ -148,12 +151,16 @@
 <script>
     import $axios from '@/apiClient';
     import { useRouter } from 'vue-router';
+    import $ from 'jquery';
+    import Datepicker from 'vue3-datepicker'
+    import 'bootstrap/dist/css/bootstrap.min.css';
+    import 'bootstrap';
 
     export default {
         data() {
             return {
-                toast_msg: '',//¨t²Î°T®§©T©w #liveToast
-                userIsAuthenticated: isAuthenticated, //¥Î­¶­±§PÂ_¬O§_¬°µn¤J
+                toast_msg: '',//ç³»çµ±è¨Šæ¯å›ºå®š #liveToast
+                //userIsAuthenticated: isAuthenticated, //ç”¨é é¢åˆ¤æ–·æ˜¯å¦ç‚ºç™»å…¥
                 enums: {
                     purposes: [],
                 },
@@ -165,7 +172,7 @@
                     EntryTimeEnd: null,
 
                 },
-                entryLogs: [], // ¦s©ñªğ¦^ªº entryLogs
+                entryLogs: [], // å­˜æ”¾è¿”å›çš„ entryLogs
                 entryTime: null,
                 entryHour: 0,
                 entryMin: 0,
@@ -178,7 +185,7 @@
                     phoneNumber: '',
                     fullName: '',
                     numberOfPeople: 0,
-                    interviewee: '',//¨ü³X¤H
+                    interviewee: '',//å—è¨ªäºº
                     purpose: 0,
                     otherDescription: '',
                     note: '',
@@ -188,7 +195,7 @@
                 },
                 entryLogsItem: {
                     entryTime: null,
-                },//¦sÀÉ¥Î
+                },//å­˜æª”ç”¨
             };
         },
         async created() {
@@ -239,14 +246,14 @@
                 this.entryTime = now.format('YYYY-MM-DD');
                 this.entryHour = now.hour();
                 this.entryMin = now.minute();
-                this.combineEntryTime(); // ¦X¨Ö®É¶¡¨Ã§ó·s datas.entryTime
+                this.combineEntryTime(); // åˆä½µæ™‚é–“ä¸¦æ›´æ–° datas.entryTime
             },
             setCurrentDateTimeToExitTime() {
                 const now = moment();
                 this.exitTime = now.format('YYYY-MM-DD');
                 this.exitHour = now.hour();
                 this.exitMin = now.minute();
-                this.combineExitTime(); // ¦X¨Ö®É¶¡¨Ã§ó·s datas.exitTime
+                this.combineExitTime(); // åˆä½µæ™‚é–“ä¸¦æ›´æ–° datas.exitTime
             },
             combineEntryTime() {
                 if (this.entryTime) {
@@ -267,44 +274,44 @@
             async submitForm() {
                 const tt = JSON.parse(JSON.stringify(this.datas));
                 // console.log(`/api/Entry/Update`, JSON.stringify(this.datas))
-                //¤§«á¦A¥[¤JÅçÃÒ
+                //ä¹‹å¾Œå†åŠ å…¥é©—è­‰
                 try {
                     const response =
-                        await axios.post(`/api/Entry/Update`, tt).then((res) => {
+                        await $axios.post(`/api/Entry/Update`, tt).then((res) => {
                             //const { data } = res;
-                            alert('´£¥æ¦¨¥\');
+                            //alert('æäº¤æˆåŠŸ');
                         });
                     this.searchLogList();
                 } catch (error) {
-                    console.error('´£¥æ¥¢±Ñ:', error);
-                    alert('´£¥æ¥¢±Ñ');
+                    console.error('æäº¤å¤±æ•—:', error);
+                    //alert('æäº¤å¤±æ•—');
                 }
             },
             async submitExitForm() {
                 //this.datas
                 const tt = JSON.parse(JSON.stringify(this.entryLogsItem));
-                //¤§«á¦A¥[¤JÅçÃÒ
+                //ä¹‹å¾Œå†åŠ å…¥é©—è­‰
                 console.log(`/api/Entry/UpdateExitDate`, tt)
                 try {
                     const response =
-                        await axios.post(`/api/Entry/UpdateExitDate`, tt).then((res) => {
+                        await $axios.post(`/api/Entry/UpdateExitDate`, tt).then((res) => {
                             const { data } = res;
                             console.log(data)
-                            alert('´£¥æ¦¨¥\');
+                            //alert('æäº¤æˆåŠŸ');
                         });
                     this.searchLogList();
                 } catch (error) {
-                    console.error('´£¥æ¥¢±Ñ:', error);
-                    alert('´£¥æ¥¢±Ñ');
+                    console.error('æäº¤å¤±æ•—:', error);
+                    //alert('æäº¤å¤±æ•—');
                 }
             },
             async getCampuses() {
-                // µo°e AJAX GET ½Ğ¨D¥HÀò¨ú©Ò¦³®Õ°Ï¼Æ¾Ú
-                const res = await axios.get(`/api/Account/GetAllCampuses`)
+                // ç™¼é€ AJAX GET è«‹æ±‚ä»¥ç²å–æ‰€æœ‰æ ¡å€æ•¸æ“š
+                const res = await $axios.get(`/api/Account/GetAllCampuses`)
                 this.campuses = res.data
             },
             async fetchEnum() {
-                const res = await axios.get(`/api/Common/EnumList`);
+                const res = await $axios.get(`/api/Common/EnumList`);
                 this.enums = res.data;
             },
             async searchLogList() {
@@ -315,14 +322,15 @@
                 params.ExitTimeStart = null;
                 params.ExitTimeEnd = null;
                 //console.log(params)
-                // µo°e±a¦³·j¯Á°Ñ¼Æªº GET ½Ğ¨D¨ì API
-                const res = await axios.get(`/api/Entry/EntryLogList`, { params });
-                // §ó·s entryLogs ¼Æ¾Ú
+                // ç™¼é€å¸¶æœ‰æœç´¢åƒæ•¸çš„ GET è«‹æ±‚åˆ° API
+                const res = await $axios.get(`/api/Entry/EntryLogList`, { params });
+                // æ›´æ–° entryLogs æ•¸æ“š
 
                 this.entryLogs = res.data;
             },
             async datapickerInit() {
                 const vm = this;
+                /*
                 $('#entryTime').datepicker({
                     format: 'yyyy-mm-dd',
                     autoclose: true,
@@ -331,6 +339,7 @@
                     vm.entryTime = e.format(0, 'yyyy-mm-dd');
                     vm.combineEntryTime()
                 });
+                */
             },
             formatDate(date) {
                 return moment(date).format('YYYY-MM-DD HH:mm:ss');
@@ -341,12 +350,12 @@
                     if (tt) {
                         return tt.name;
                     }
-                    return 'µL';
+                    return 'ç„¡';
                 }
             },
             setExitDate(item) {
                 $('#setExitDateDiaglog').modal('show');
-                //»İ­n¬~¹L¸ê®Æ
+                //éœ€è¦æ´—éè³‡æ–™
                 this.entryLogsItem = Object.assign({}, item);
             },
         }
