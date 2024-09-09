@@ -3,9 +3,9 @@
         <div class="row">
             <!-- Left Column -->
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group" v-if="!userIsAuthenticated">
                     <label class="form-label">校區</label>
-                    v-if="!userIsAuthenticated"
+                    
                     <select class="form-select" v-model="datas.campusId">
                         <option :value="null">請選擇校區</option>
                         <option v-for="campus in campuses" :value="campus.id">{{ campus.campusName }}</option>

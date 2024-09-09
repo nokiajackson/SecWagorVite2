@@ -24,6 +24,7 @@
             <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
             <div class="form-group">
                 <button type="button" @click="login">Login</button>
+                <button type="button" class="btn btn-outline-primary" @click="logout">Log out</button>
             </div>
         </div>
     </div>
@@ -61,7 +62,7 @@
             },
             login() {
                 const router = useRouter();
-
+                console.log(this.$antiForgeryToken)
                 if (
                     this.datas.username === "" ||
                     this.datas.password === "" ||
@@ -81,7 +82,19 @@
                     }
                 }
             },
-            
+            async logout() {
+                try {
+                // 發送登出請求到後端
+                await axios.post('/api/Account/Logout');
+
+                // 清除本地存儲的 token 或用戶信息
+                localStorage.removeItem('token'); // 如果使用 localStorage 儲存 JWT token
+                this.$router.push('/login'); // 重定向到登錄頁面
+
+                } catch (error) {
+                console.error("Logout failed", error);
+                }
+            }
         },
     };
 </script>

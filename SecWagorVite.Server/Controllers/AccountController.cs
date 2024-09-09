@@ -82,7 +82,8 @@ public class AccountController : Controller
         var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
         return Ok(new { token = tokens.RequestToken });
     }
-    [HttpPost("login")]
+
+    [HttpPost("Login")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginModelVM model)
     {
@@ -90,8 +91,6 @@ public class AccountController : Controller
         bool isValid = _accountService.ValidateCredentials(model);
         if (isValid)
         {
-            //var account = DbModel.Accounts.FirstOrDefault(a => a.Username == model.Username);
-
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var claims = new List<Claim>
@@ -121,7 +120,6 @@ public class AccountController : Controller
             ViewData["CurrentCampus"] = campus?.CampusName.ToString();
             // 先暫略過 後續再寫
 
-
             return Ok("Login successful.");
         }
         else
@@ -135,12 +133,18 @@ public class AccountController : Controller
     /// </summary>
     /// <returns></returns>
     [HttpGet, HttpPost]
+    [Route("Logout")]
     //[SwaggerResponse(200, type: typeof(Result<IActionResult>))]
     public IActionResult Logout()
     {
+        // 清除 Cookies 或 Session
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //HttpContext.Session.Clear();
 
-        return RedirectToAction("Index", "Home");
+        // 如果使用的是 Cookies 認證
+        //HttpContext.SignOutAsync();
+
+        return Ok(new { message = "Logout successful" });
     }
 
     /// <summary>
