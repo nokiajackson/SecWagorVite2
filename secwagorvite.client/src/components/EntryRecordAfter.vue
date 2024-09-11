@@ -33,7 +33,6 @@
             <div class="col-md-8">
                 <div class="mb-3">
                     <label class="form-label">事由 : </label>
-                    這裡要 
                     <label class="form-check form-check-inline"
                            v-for="option in enums.purposes" :key="option.Key">
                         <input class="form-check-input" type="radio" v-model="datas.purpose"  :value="option.key">

@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var frontendUrl = builder.Environment.IsDevelopment()
     ? Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "https://localhost:5173"  // 開發環境默認使用 localhost
-    : Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://http://192.168.0.66:8050/"; // 發佈環境使用生產URL
+    : Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://http://192.168.0.66:8050"; // 發佈環境使用生產URL
 
 builder.Services.AddCors(options =>
 {
