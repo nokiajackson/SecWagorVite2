@@ -91,14 +91,9 @@ public class AccountController : Controller
     }
 
     [HttpPost("Login")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(
-            [FromForm] string username,
-            [FromForm] string password)
+    [ValidateAntiForgeryToken2]
+    public async Task<IActionResult> Login(LoginModelVM model)
     {
-        LoginModelVM model = new LoginModelVM();
-        model.Username = username;
-        model.Password = password;
         //model.Captcha = captcha;
         // 驗證用戶名和密碼
         bool isValid = _accountService.ValidateCredentials(model);

@@ -40,6 +40,7 @@
                 datas: {
                     username: "",
                     password: "",
+                    captcha: "",
                     campus: 1,
                 },
                 campuses: [],
@@ -74,7 +75,7 @@
 
                     const res = $axios.post("/api/Account/Login", this.datas, {
                         headers: {
-                            'X-CSRF-TOKEN': this.$antiForgeryToken
+                            '__RequestVerificationToken': this.$antiForgeryToken
                         }
                     })
                     if (res.data) {
