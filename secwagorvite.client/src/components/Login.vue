@@ -74,7 +74,7 @@
 
                     const res = $axios.post("/api/Account/Login", this.datas, {
                         headers: {
-                            'RequestVerificationToken': this.$antiForgeryToken
+                            'X-CSRF-TOKEN': this.$antiForgeryToken
                         }
                     })
                     if (res.data) {

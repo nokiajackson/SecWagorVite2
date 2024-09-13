@@ -54,14 +54,21 @@ public class AccountController : Controller
         return Task.FromResult<IActionResult>(Ok("Account created successfully."));
     }
 
-    private bool ValidateImageCaptcha(string captcha)
+    /// <summary>
+    /// 驗證圖
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("Captcha")] // 如果您使用了自定義路由，請確保包括該路由
+    //[SwaggerResponse(200, type: typeof(FileContentResult))]
+    public IActionResult Captcha()
     {
-        // 在這裡執行圖片驗證碼驗證的邏輯
-        // 這裡僅作為示例，實際應用中你需要根據你的驗證碼機制進行處理
-        // 如果圖片驗證碼正確，返回 true，否則返回 false
-        // 注意：圖片驗證碼的驗證可能涉及對用戶輸入的圖片進行 OCR 或其他處理
-        // 或者是比較用戶輸入的驗證碼與服務端生成的驗證碼是否一致
-        return captcha == "correct_image_captcha";
+        var code = CaptchaHelper.GetCode(6);
+        TempData["captcha"] = code; // 將驗證碼存儲在 TempData 中
+
+
+        var byteArray = CaptchaHelper.GetByteArray(code);
+        return File(byteArray, "image/jpeg");
     }
 
     [HttpGet("{userName}")]
@@ -85,8 +92,14 @@ public class AccountController : Controller
 
     [HttpPost("Login")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginModelVM model)
+    public async Task<IActionResult> Login(
+            [FromForm] string username,
+            [FromForm] string password)
     {
+        LoginModelVM model = new LoginModelVM();
+        model.Username = username;
+        model.Password = password;
+        //model.Captcha = captcha;
         // 驗證用戶名和密碼
         bool isValid = _accountService.ValidateCredentials(model);
         if (isValid)
@@ -127,7 +140,9 @@ public class AccountController : Controller
             return Unauthorized("Invalid credentials.");
         }
     }
+
     
+
     /// <summary>
     /// 登出
     /// </summary>
@@ -147,22 +162,7 @@ public class AccountController : Controller
         return Ok(new { message = "Logout successful" });
     }
 
-    /// <summary>
-    /// 驗證圖
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    [Route("Captcha")] // 如果您使用了自定義路由，請確保包括該路由
-    //[SwaggerResponse(200, type: typeof(FileContentResult))]
-    public IActionResult Captcha()
-    {
-        var code = CaptchaHelper.GetCode(6);
-        TempData["captcha"] = code; // 將驗證碼存儲在 TempData 中
-
-
-        var byteArray = CaptchaHelper.GetByteArray(code);
-        return File(byteArray, "image/jpeg");
-    }
+    
 
     void WriteLog(string message)
     {
