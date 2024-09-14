@@ -75,9 +75,10 @@
 
                     const res = $axios.post("/api/Account/Login", this.datas, {
                         headers: {
-                            '__RequestVerificationToken': this.$antiForgeryToken
+                            'RequestVerificationToken': this.$antiForgeryToken
                         }
-                    })
+                    });
+                    console.log(res.data)
                     if (res.data) {
                         router.push('/dashboard'); // 或其他需要跳轉的路由
                     }

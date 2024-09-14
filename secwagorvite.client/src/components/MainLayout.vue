@@ -1,8 +1,8 @@
 <template>
     <div>
       <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/entryrecord">Entry Record</router-link>
+        <router-link to="/">登入</router-link>
+        <router-link to="/entryrecord">登記作業</router-link>
       </nav>
       <main>
         <router-view />

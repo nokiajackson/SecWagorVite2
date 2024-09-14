@@ -87,28 +87,28 @@
                     <th>離校時間</th>
                 </tr>
             </thead>
-            <!--<tbody>
-        <tr v-for="log in entryLogs" :key="log.id">
-            <td>{{ log.fullName }}</td>
-            <td>{{ log.phoneNumber }}</td>
-            <td class="text-center">{{ log.numberOfPeople }}</td>
-            <td>{{ log.interviewee }}</td>
-            <td>{{ findPurpose(log.purpose) }}</td>
-            <td>{{ log.note }}</td>
-            <td>{{ log.replacementNumber }}</td>
-            <td>
-                <b>{{ formatDate(log.entryTime) }}</b>
-            </td>
-            <td>
-                <b v-if="log.exitTime">
-                    {{ formatDate(log.exitTime) }}
-                </b>
-                <button type="bottom" class="btn btn-danger text-white" v-else v-on:click="setExitDate(log)">
-                    紀錄離校時間
-                </button>
-            </td>
-        </tr>
-    </tbody>-->
+            <tbody>
+                <tr v-for="log in entryLogs" :key="log.id">
+                    <td>{{ log.fullName }}</td>
+                    <td>{{ log.phoneNumber }}</td>
+                    <td class="text-center">{{ log.numberOfPeople }}</td>
+                    <td>{{ log.interviewee }}</td>
+                    <td>{{ findPurpose(log.purpose) }}</td>
+                    <td>{{ log.note }}</td>
+                    <td>{{ log.replacementNumber }}</td>
+                    <td>
+                        <b>{{ formatDate(log.entryTime) }}</b>
+                    </td>
+                    <td>
+                        <b v-if="log.exitTime">
+                            {{ formatDate(log.exitTime) }}
+                        </b>
+                        <button type="bottom" class="btn btn-danger text-white" v-else v-on:click="setExitDate(log)">
+                            紀錄離校時間
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
         <pre>{{entryLogs}}</pre>
     </div>
@@ -159,7 +159,7 @@
         data() {
             return {
                 toast_msg: '',//系統訊息固定 #liveToast
-                //userIsAuthenticated: isAuthenticated, //用頁面判斷是否為登入
+                userIsAuthenticated: true, //用頁面判斷是否為登入
                 enums: {
                     purposes: [],
                 },
@@ -241,14 +241,14 @@
                 $('#liveToast').toast('show');
             },
             setCurrentDateTime() {
-                const now = moment();
+                const now = this.$moment();
                 this.entryTime = now.format('YYYY-MM-DD');
                 this.entryHour = now.hour();
                 this.entryMin = now.minute();
                 this.combineEntryTime(); // 合併時間並更新 datas.entryTime
             },
             setCurrentDateTimeToExitTime() {
-                const now = moment();
+                const now = this.$moment();
                 this.exitTime = now.format('YYYY-MM-DD');
                 this.exitHour = now.hour();
                 this.exitMin = now.minute();
@@ -257,7 +257,7 @@
             combineEntryTime() {
                 if (this.entryTime) {
                     const combinedTime = `${this.entryTime} ${String(this.entryHour).padStart(2, '0')}:${String(this.entryMin).padStart(2, '0')}:00`;
-                    this.datas.entryTime = moment(combinedTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
+                    this.datas.entryTime = this.$moment(combinedTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
                 } else {
                     this.datas.entryTime = null;
                 }
@@ -265,7 +265,7 @@
             combineExitTime() {
                 if (this.exitTime) {
                     const combinedTime = `${this.exitTime} ${String(this.exitHour).padStart(2, '0')}:${String(this.exitMin).padStart(2, '0')}:00`;
-                    this.entryLogsItem.exitTime = moment(combinedTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
+                    this.entryLogsItem.exitTime = this.$moment(combinedTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
                 } else {
                     this.entryLogsItem.exitTime = null;
                 }
@@ -315,9 +315,9 @@
             },
             async searchLogList() {
                 const params = this.params;
-                const today = moment().format('YYYY-MM-DD');
-                params.EntryTimeStart = moment(today).startOf('day').format('YYYY-MM-DD HH:mm:ss');
-                params.EntryTimeEnd = moment(today).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+                const today = this.$moment().format('YYYY-MM-DD');
+                params.EntryTimeStart = this.$moment(today).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+                params.EntryTimeEnd = this.$moment(today).endOf('day').format('YYYY-MM-DD HH:mm:ss');
                 params.ExitTimeStart = null;
                 params.ExitTimeEnd = null;
                 //console.log(params)
@@ -341,7 +341,7 @@
                 */
             },
             formatDate(date) {
-                return moment(date).format('YYYY-MM-DD HH:mm:ss');
+                return this.$moment(date).format('YYYY-MM-DD HH:mm:ss');
             },
             findPurpose(val) {
                 if (this.enums.purposes.length > 0 && val) {
