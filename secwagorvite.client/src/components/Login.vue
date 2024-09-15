@@ -35,6 +35,7 @@
     import { useRouter } from 'vue-router';
 
     export default {
+        name: 'Login',
         data() {
             return {
                 datas: {
@@ -61,7 +62,7 @@
                         console.error('Error fetching campuses:', error);
                     });
             },
-            login() {
+            async login() {
                 const router = useRouter();
                 console.log(this.$antiForgeryToken)
                 if (
@@ -73,14 +74,16 @@
                 } else {
                     this.errorMessage = "";
 
-                    const res = $axios.post("/api/Account/Login", this.datas, {
+                    const res = await $axios.post("/api/Account/Login", this.datas, {
                         headers: {
                             'RequestVerificationToken': this.$antiForgeryToken
                         }
                     });
                     console.log(res.data)
                     if (res.data) {
-                        router.push('/dashboard'); // 或其他需要跳轉的路由
+                        router.push({ name: 'EntryRecordBefore' });
+                    } else {
+                        this.errorMessage = "登入失敗.";
                     }
                 }
             },

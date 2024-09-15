@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Data.Entity.Infrastructure;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authorization;
 
 
 [Route("api/[controller]")]
@@ -113,9 +114,7 @@ public class AccountController : Controller
             {
                 // 添加校區信息到Claim中
                 claims.Add( new Claim("CampusName", campus.CampusName.ToString()));
-                claims.Add(new Claim("CampusId", model.Campus.ToString()));
-
-
+                claims.Add( new Claim("CampusId", model.Campus.ToString()));
             }
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
@@ -125,7 +124,7 @@ public class AccountController : Controller
                 principal,
                 authProperties);
                 
-            ViewData["CurrentCampus"] = campus?.CampusName.ToString();
+            //ViewData["CurrentCampus"] = campus?.CampusName.ToString();
             // 先暫略過 後續再寫
 
             return Ok("Login successful.");
@@ -136,7 +135,28 @@ public class AccountController : Controller
         }
     }
 
-    
+    [Authorize]
+    [HttpGet("GetCampusInfo")]
+    public IActionResult GetCampusInfo()
+    {
+        var campusNameClaim = HttpContext.User.FindFirst("CampusName")?.Value;
+        var campusIdClaim = HttpContext.User.FindFirst("CampusId")?.Value;
+
+        if (campusNameClaim != null && campusIdClaim != null)
+        {
+            Campu campus = new Campu
+            {
+                CampusName = campusNameClaim,
+                CampusId = campusIdClaim
+            };
+
+            return Ok(campus);
+        }
+
+        return NotFound("Campus information not found.");
+    }
+
+
 
     /// <summary>
     /// 登出
@@ -172,4 +192,11 @@ public class AccountController : Controller
             sw.WriteLine(string.Format("{0:T}:{1} ", DateTime.Now, message));
         }
     }
+}
+
+public class Campu
+{
+    public string CampusName { get; set; }
+    public string CampusId { get; set; }
+
 }
