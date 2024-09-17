@@ -57,7 +57,7 @@
                 <div class="row mb-3">
                     <div class="col-6">
                         <label for="entryTime" class="form-label">入校日期</label>
-                        <!-- <Datepicker class="form-control" v-model="entryTime" :format="'yyyy-MM-dd'" /> -->
+                        <VueDatePicker v-model="entryTime" :format="'yyyy-MM-dd'" />
 
                         <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTime">帶入現在時間</button>
                     </div>
@@ -152,9 +152,7 @@
 
 <script>
     import $axios from '@/apiClient';
-    import { useRouter } from 'vue-router';
     import $ from 'jquery';
-    import  Datepicker from 'vue3-datepicker'
     import 'bootstrap/dist/css/bootstrap.min.css';
     import 'bootstrap';
 

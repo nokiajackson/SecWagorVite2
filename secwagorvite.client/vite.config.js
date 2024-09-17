@@ -45,7 +45,7 @@ export default defineConfig({
         }
     },
     optimizeDeps: {
-        include: ['jquery']
+        include: ['jquery','@vuepic/vue-datepicker']
     },
     server: {
         proxy: {
