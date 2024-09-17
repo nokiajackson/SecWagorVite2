@@ -118,7 +118,12 @@ public class AccountController : Controller
             }
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
-            var authProperties = new AuthenticationProperties { };
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,  // 設置持續性
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) // 設置過期時間
+            };
+
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme, 
                 principal,
@@ -135,12 +140,16 @@ public class AccountController : Controller
         }
     }
 
-    [Authorize]
-    [HttpGet("GetCampusInfo")]
-    public IActionResult GetCampusInfo()
+    [HttpPost("GetCampusInfo")]
+    public async Task<Result<Campu>> GetCampusInfo()
     {
-        var campusNameClaim = HttpContext.User.FindFirst("CampusName")?.Value;
-        var campusIdClaim = HttpContext.User.FindFirst("CampusId")?.Value;
+        if (!HttpContext.User.Identity.IsAuthenticated)
+        {
+            return ResultHelper.Failure<Campu>("未登入!", ResultHelper.StatusCode.Get);
+        }
+
+        var campusNameClaim = HttpContext.User.FindFirst("CampusName")?.Value ??"" ;
+        var campusIdClaim = HttpContext.User.FindFirst("CampusId")?.Value ?? "";
 
         if (campusNameClaim != null && campusIdClaim != null)
         {
@@ -150,10 +159,10 @@ public class AccountController : Controller
                 CampusId = campusIdClaim
             };
 
-            return Ok(campus);
+            //return Ok(campus);
+            return ResultHelper.Success<Campu>(campus, ResultHelper.StatusCode.Get);
         }
-
-        return NotFound("Campus information not found.");
+        return ResultHelper.Failure<Campu>("無法取得資訊!", ResultHelper.StatusCode.Get);
     }
 
 

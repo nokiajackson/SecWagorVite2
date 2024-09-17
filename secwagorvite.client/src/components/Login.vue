@@ -9,9 +9,9 @@
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password"
-                       id="password"
-                       v-model="datas.password"
-                       required />
+                            id="password"
+                            v-model="datas.password"
+                            required />
             </div>
             <div class="form-group">
                 <label for="campusDropdown">Campus</label>
@@ -83,18 +83,18 @@
                     if (res.data) {
                         router.push({ name: 'EntryRecordBefore' });
                     } else {
-                        this.errorMessage = "µn¤J¥¢±Ñ.";
+                        this.errorMessage = "ç™»å…¥å¤±æ•—.";
                     }
                 }
             },
             async logout() {
                 try {
-                // µo°eµn¥X½Ğ¨D¨ì«áºİ
-                await axios.post('/api/Account/Logout');
+                // ç™¼é€ç™»å‡ºè«‹æ±‚åˆ°å¾Œç«¯
+                await $axios.post('/api/Account/Logout');
 
-                // ²M°£¥»¦a¦sÀxªº token ©Î¥Î¤á«H®§
-                localStorage.removeItem('token'); // ¦pªG¨Ï¥Î localStorage Àx¦s JWT token
-                this.$router.push('/login'); // ­«©w¦V¨ìµn¿ı­¶­±
+                // æ¸…é™¤æœ¬åœ°å­˜å„²çš„ token æˆ–ç”¨æˆ¶ä¿¡æ¯
+                localStorage.removeItem('token'); // å¦‚æœä½¿ç”¨ localStorage å„²å­˜ JWT token
+                this.$router.push('/login'); // é‡å®šå‘åˆ°ç™»éŒ„é é¢
 
                 } catch (error) {
                 console.error("Logout failed", error);

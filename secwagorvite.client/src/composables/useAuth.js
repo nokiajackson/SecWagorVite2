@@ -1,27 +1,27 @@
 // src/composables/useAuth.js
 
 import { ref } from 'vue';
-import axios from 'axios';
+import $axios from '@/apiClient';
 
-const isAuthenticated = ref(false); // ¥Î©óªí¥Ü¥Î¤á¬O§_¤wµn¿ı
+const isAuthenticated = ref(false); // ç”¨æ–¼è¡¨ç¤ºç”¨æˆ¶æ˜¯å¦å·²ç™»éŒ„
 
 export function useAuth() {
-    // Àò¨úµn¿ıª¬ºA
+    // ç²å–ç™»éŒ„ç‹€æ…‹
     function getAuthStatus() {
         return isAuthenticated.value;
     }
 
-    // µn¿ı¤èªk
+    // ç™»éŒ„æ–¹æ³•
     async function login(username, password, campus) {
         try {
-            const response = await axios.post('/Api/Account/Login', {
+            const response = await $axios.post('/Api/Account/Login', {
                 username,password, campus
             });
 
-            // °²³]µn¿ı¦¨¥\«á«áºİªğ¦^ 200 ª¬ºA
+            // å‡è¨­ç™»éŒ„æˆåŠŸå¾Œå¾Œç«¯è¿”å› 200 ç‹€æ…‹
             if (response.status === 200) {
                 isAuthenticated.value = true;
-                // ¥i¥H¦sÀx¥OµP©Î¥Î¤á«H®§¨ì¥»¦a¦sÀx©Î cookies
+                // å¯ä»¥å­˜å„²ä»¤ç‰Œæˆ–ç”¨æˆ¶ä¿¡æ¯åˆ°æœ¬åœ°å­˜å„²æˆ– cookies
                 localStorage.setItem('authToken', response.data.token);
             }
         } catch (error) {
@@ -30,22 +30,22 @@ export function useAuth() {
         }
     }
 
-    // µn¥X¤èªk
+    // ç™»å‡ºæ–¹æ³•
     function logout() {
-        // ²M°£»{ÃÒª¬ºA
+        // æ¸…é™¤èªè­‰ç‹€æ…‹
         isAuthenticated.value = false;
         localStorage.removeItem('authToken');
-        // ¥i¥Hµo°e½Ğ¨D¨ì«áºİ¶i¦æµn¥X³B²z
+        // å¯ä»¥ç™¼é€è«‹æ±‚åˆ°å¾Œç«¯é€²è¡Œç™»å‡ºè™•ç†
     }
 
-    // ÀË¬d¬O§_¦³¦³®Äªº¥OµP
+    // æª¢æŸ¥æ˜¯å¦æœ‰æœ‰æ•ˆçš„ä»¤ç‰Œ
     function checkAuth() {
         const token = localStorage.getItem('authToken');
-        // ©p¥i¥H¦b³oùØÅçÃÒ¥OµPªº¦³®Ä©Ê¡A³q±`»İ­nµo°e½Ğ¨D¨ì«áºİ
+        // å¦³å¯ä»¥åœ¨é€™è£é©—è­‰ä»¤ç‰Œçš„æœ‰æ•ˆæ€§ï¼Œé€šå¸¸éœ€è¦ç™¼é€è«‹æ±‚åˆ°å¾Œç«¯
         isAuthenticated.value = !!token;
     }
 
-    // ¦b²Õ¥óªì©l¤Æ®ÉÀË¬d»{ÃÒª¬ºA
+    // åœ¨çµ„ä»¶åˆå§‹åŒ–æ™‚æª¢æŸ¥èªè­‰ç‹€æ…‹
     checkAuth();
 
     return {

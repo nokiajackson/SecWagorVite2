@@ -3,13 +3,16 @@
         <div class="row">
             <!-- Left Column -->
             <div class="col-md-4">
-                <div class="form-group" v-if="!userIsAuthenticated">
+                <div class="form-group">
                     <label class="form-label">校區</label>
                     
-                    <select class="form-select" v-model="datas.campusId">
-                        <option :value="null">請選擇校區</option>
-                        <option v-for="campus in campuses" :value="campus.id">{{ campus.campusName }}</option>
+                    <select class="form-select" v-model="datas.campusId"  v-if="!userIsAuthenticated">
+                        <option :value="0">請選擇校區</option>
+                        <option v-for="campus in campuses" :key="campus.id" :value="campus.id">{{ campus.campusName }}</option>
                     </select>
+                    <div v-else class="form-select-text">
+                        {{ campusInfo.campusName }}
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">姓名</label>
@@ -34,7 +37,7 @@
                 <div class="mb-3">
                     <label class="form-label">事由 : </label>
                     <label class="form-check form-check-inline"
-                           v-for="option in enums.purposes" :key="option.Key">
+                            v-for="option in enums.purposes" :key="option.Key">
                         <input class="form-check-input" type="radio" v-model="datas.purpose"  :value="option.key">
                         <span class="form-check-label">{{option.name}}</span>
                     </label>
@@ -54,7 +57,7 @@
                 <div class="row mb-3">
                     <div class="col-6">
                         <label for="entryTime" class="form-label">入校日期</label>
-                        <Datepicker class="form-control" v-model="entryTime" :format="'yyyy-MM-dd'" />
+                        <!-- <Datepicker class="form-control" v-model="entryTime" :format="'yyyy-MM-dd'" /> -->
 
                         <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTime">帶入現在時間</button>
                     </div>
@@ -62,9 +65,9 @@
                         <label for="entryTime" class="form-label">入校時間</label>
                         <div class="input-group">
                             <input type="number" class="form-control"
-                                   v-model.number="entryHour" v-on:change="combineEntryTime">
+                                    v-model.number="entryHour" v-on:change="combineEntryTime">
                             <input type="number" class="form-control"
-                                   v-model.number="entryMin" v-on:change="combineEntryTime">
+                                    v-model.number="entryMin" v-on:change="combineEntryTime">
                         </div>
                     </div>
                 </div>
@@ -110,7 +113,6 @@
                 </tr>
             </tbody>
         </table>
-        <pre>{{entryLogs}}</pre>
     </div>
     <div class="modal fade" id="setExitDateDiaglog" tabindex="-1" aria-labelledby="setExitDateDiaglogLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -130,9 +132,9 @@
                             <label for="exitTime" class="form-label">離校時間</label>
                             <div class="input-group">
                                 <input type="number" class="form-control"
-                                       v-model.number="exitHour" v-on:change="combineExitTime">
+                                        v-model.number="exitHour" v-on:change="combineExitTime">
                                 <input type="number" class="form-control"
-                                       v-model.number="exitMin" v-on:change="combineExitTime">
+                                        v-model.number="exitMin" v-on:change="combineExitTime">
                             </div>
                         </div>
                     </div>
@@ -145,13 +147,14 @@
             </div>
         </div>
     </div>
+    {{campusInfo}}
 </template>
 
 <script>
     import $axios from '@/apiClient';
     import { useRouter } from 'vue-router';
     import $ from 'jquery';
-    import Datepicker from 'vue3-datepicker'
+    import  Datepicker from 'vue3-datepicker'
     import 'bootstrap/dist/css/bootstrap.min.css';
     import 'bootstrap';
 
@@ -164,6 +167,7 @@
                     purposes: [],
                 },
                 campuses: [],
+                campusInfo:{ "campusName": "", "campusId": "" },
                 params: {
                     FullName: null,
                     Purpose: null,
@@ -200,7 +204,8 @@
         async created() {
             await this.fetchEnum();
             await this.getCampuses();
-            await this.datapickerInit();
+            await this.getCampusInfo();
+
             if (this.userIsAuthenticated) {
                 await this.searchLogList();
             }
@@ -312,6 +317,16 @@
             async fetchEnum() {
                 const res = await $axios.get(`/api/Common/EnumList`);
                 this.enums = res.data;
+            },
+            async getCampusInfo() {
+                const res = await $axios.post(`/api/Account/GetCampusInfo`);
+                const { data } = res;
+                this.userIsAuthenticated = data.success;
+                if(data.success){
+                    this.campusInfo = data.data;
+                    this.datas.campusId = data.data.campusId;
+                }
+                
             },
             async searchLogList() {
                 const params = this.params;

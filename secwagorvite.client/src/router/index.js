@@ -4,7 +4,7 @@ import MainLayout from '@/components/MainLayout.vue';
 import EntryRecordBefore from '@/components/EntryRecordBefore.vue';
 import EntryRecordAfter from '@/components/EntryRecordAfter.vue';
 import HelloWorld from '@/components/HelloWorld.vue';
-import { useAuth } from '@/composables/useAuth'; // ¦Û­qªº»{ÃÒ³B²z
+import { useAuth } from '@/composables/useAuth'; // è‡ªè¨‚çš„èªè­‰è™•ç†
 
 const routes = [
     //{
@@ -57,9 +57,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const auth = useAuth();
     const isAuthenticated = auth.isAuthenticated();
+    console.log('beforeEach');
 
     if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-        next('/login');
+        next('/login/entryrecord');
     } else {
         next();
     }

@@ -81,6 +81,7 @@ builder.Services.AddAuthentication(options =>
         //當權限不夠拒絕訪問會自動導到此路徑
         options.AccessDeniedPath = new PathString("/");
     });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -107,6 +108,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
+app.UseAuthentication(); // 確保這個中間件在 UseAuthorization 之前
 app.UseAuthorization();
 app.MapControllers();
 

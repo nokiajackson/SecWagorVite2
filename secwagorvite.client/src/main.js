@@ -11,7 +11,9 @@ import moment from 'moment';
 
 async function getAntiForgeryToken() {
     const response = await $axios.get('/api/Account/GetAntiForgeryToken');
-    return response.data.token;
+    const { token} = response.data;
+    localStorage.setItem('token', JSON.stringify(token))
+    return token;
 }
 
 
