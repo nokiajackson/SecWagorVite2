@@ -7,7 +7,7 @@ import axios from 'axios';
 const isInternalNetwork = () => {
     const hostname = window.location.hostname;
     // 假設內部網路 IP 是 192.168. 或者 localhost
-    return hostname.startsWith('192.168.') || hostname === 'localhost';
+    return hostname.startsWith('192.168.') ;
 };
 
 

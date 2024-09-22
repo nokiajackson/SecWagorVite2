@@ -178,7 +178,7 @@ public class AccountController : Controller
     {
         // 清除 Cookies 或 Session
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        HttpContext.Session.Clear();
+        //HttpContext.Session.Clear();
 
         // 如果使用的是 Cookies 認證
         //HttpContext.SignOutAsync();

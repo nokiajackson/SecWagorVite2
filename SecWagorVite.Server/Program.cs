@@ -61,6 +61,7 @@ builder.Services.AddScoped<EntryLogService>();
 builder.Services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
+    options.IdleTimeout = TimeSpan.FromMinutes(60); 
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Lax;
 });

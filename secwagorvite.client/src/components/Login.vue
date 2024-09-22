@@ -1,5 +1,11 @@
 <template>
+    
     <div class="login-container" v-if="userIsAuthenticated">
+        <div class="form-group">
+                <button type="button" @click="logout">logout</button>
+            </div>
+    </div>
+    <div class="login-container" v-else>
         <h2>Login</h2>
         <div>
             <div class="form-group">
@@ -27,11 +33,6 @@
             </div>
         </div>
     </div>
-    <div class="login-container" v-else>
-        <div class="form-group">
-                <button type="button" @click="logout">logout</button>
-            </div>
-    </div>
 </template>
 
 <script>
@@ -55,7 +56,8 @@
                 userIsAuthenticated:null,
             };
         },
-        mounted() {
+        async mounted() {
+            await this.getCampusInfo();
             this.getCampuses();
         },
         methods: {
@@ -93,6 +95,7 @@
             async getCampusInfo() {
                 const res = await $axios.post(`/api/Account/GetCampusInfo`);
                 const { data } = res;
+                console.log(data.success)
                 this.userIsAuthenticated = data.success;
             },
             async logout() {
