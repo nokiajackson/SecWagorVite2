@@ -2,8 +2,17 @@
 import axios from 'axios';
 
 //console.log(import.meta.env.VITE_API_BASE_URL)
+
+// 檢查當前環境是否是內部網路，例如通過判斷域名或者 IP
+const isInternalNetwork = () => {
+    const hostname = window.location.hostname;
+    // 假設內部網路 IP 是 192.168. 或者 localhost
+    return hostname.startsWith('192.168.') || hostname === 'localhost';
+};
+
+
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: isInternalNetwork() ? 'http://192.168.0.66:8050' : import.meta.env.VITE_API_BASE_URL,
     timeout: parseInt(import.meta.env.VITE_AXIOS_TIMEOUT) || 1000,
     headers: {
         'Content-Type': 'application/json',

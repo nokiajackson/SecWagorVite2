@@ -278,10 +278,9 @@
                 // console.log(`/api/Entry/Update`, JSON.stringify(this.datas))
                 //之後再加入驗證
                 try {
-                    const response =
-                        await $axios.post(`/api/Entry/Update`, tt).then((res) => {
+                    await $axios.post(`/api/Entry/Update`, tt).then((res) => {
                             //const { data } = res;
-                            //alert('提交成功');
+                            alert('提交成功');
                         });
                     this.searchLogList();
                 } catch (error) {
@@ -293,9 +292,7 @@
                 //this.datas
                 const tt = JSON.parse(JSON.stringify(this.entryLogsItem));
                 //之後再加入驗證
-                console.log(`/api/Entry/UpdateExitDate`, tt)
                 try {
-                    const response =
                         await $axios.post(`/api/Entry/UpdateExitDate`, tt).then((res) => {
                             const { data } = res;
                             console.log(data)
@@ -324,7 +321,6 @@
                     this.campusInfo = data.data;
                     this.datas.campusId = data.data.campusId;
                 }
-                
             },
             async searchLogList() {
                 const params = this.params;

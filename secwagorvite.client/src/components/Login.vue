@@ -1,5 +1,5 @@
 <template>
-    <div class="login-container">
+    <div class="login-container" v-if="userIsAuthenticated">
         <h2>Login</h2>
         <div>
             <div class="form-group">
@@ -27,6 +27,11 @@
             </div>
         </div>
     </div>
+    <div class="login-container" v-else>
+        <div class="form-group">
+                <button type="button" @click="logout">logout</button>
+            </div>
+    </div>
 </template>
 
 <script>
@@ -47,6 +52,7 @@
                 campuses: [],
                 errorMessage: "",
                 token: null,
+                userIsAuthenticated:null,
             };
         },
         mounted() {
@@ -83,6 +89,11 @@
                         this.errorMessage = "登入失敗.";
                     }
                 }
+            },
+            async getCampusInfo() {
+                const res = await $axios.post(`/api/Account/GetCampusInfo`);
+                const { data } = res;
+                this.userIsAuthenticated = data.success;
             },
             async logout() {
                 try {
