@@ -6,23 +6,25 @@ import $axios from '@/apiClient';
 const isAuthenticated = ref(false); // 用於表示用戶是否已登錄
 
 export function useAuth() {
-    // 獲取登錄狀態
-    function getAuthStatus() {
-        return isAuthenticated.value;
-    }
-
+    
     // 登錄方法
     async function login(username, password, campus) {
         try {
-            const response = await $axios.post('/Api/Account/Login', {
+            const res = await $axios.post('/Api/Account/Login', {
                 username,password, campus
+            }, {
+                headers: {
+                    'RequestVerificationToken': this.$antiForgeryToken
+                }
             });
 
             // 假設登錄成功後後端返回 200 狀態
-            if (response.status === 200) {
+            console.log(res)
+            if (res.status === 200) {
                 isAuthenticated.value = true;
+
                 // 可以存儲令牌或用戶信息到本地存儲或 cookies
-                localStorage.setItem('authToken', response.data.token);
+                localStorage.setItem('authToken', res.data.token);
             }
         } catch (error) {
             console.error('Login failed:', error.response?.data || error.message);
@@ -49,7 +51,10 @@ export function useAuth() {
     checkAuth();
 
     return {
-        isAuthenticated: getAuthStatus,
+        // 獲取登錄狀態
+        isAuthenticated: () => isAuthenticated.value,
+        // 設定狀態
+        setAuthenticated: (status) => { isAuthenticated.value = status; },
         login,
         logout
     };

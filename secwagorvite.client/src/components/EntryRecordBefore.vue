@@ -7,10 +7,10 @@ import SupportIcon from './icons/IconSupport.vue'
 </script>
 
 <template>
+  AAAAAA
   <DocumentationIcon />
   <ToolingIcon />
   <EcosystemIcon />
   <CommunityIcon />
   <SupportIcon />
-    BB
 </template>
