@@ -1,34 +1,36 @@
 // src/composables/useAuth.js
 
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import $axios from '@/apiClient';
+import { globalToken } from '@/main'; // 引入全局 token
 
 const isAuthenticated = ref(false); // 用於表示用戶是否已登錄
+const router = useRouter();
 
 export function useAuth() {
     
     // 登錄方法
-    async function login(username, password, campus) {
+    const login = async (loginModel) =>{
         try {
-            const res = await $axios.post('/Api/Account/Login', {
-                username,password, campus
-            }, {
+            //const token = JSON.parse(localStorage.getItem('token'));
+
+            const res = await $axios.post('/Api/Account/Login', loginModel, {
                 headers: {
-                    'RequestVerificationToken': this.$antiForgeryToken
+                    'RequestVerificationToken': globalToken
                 }
             });
-
+            console.log(res.data)
             // 假設登錄成功後後端返回 200 狀態
-            console.log(res)
-            if (res.status === 200) {
+            if (res.data) {
                 isAuthenticated.value = true;
-
-                // 可以存儲令牌或用戶信息到本地存儲或 cookies
-                localStorage.setItem('authToken', res.data.token);
+                router.push('/entryrecord');
+                //localStorage.setItem('authToken', res.data.token);
             } else {
                 isAuthenticated.value = false;
                 return false;
             }
+            return res.data;
         } catch (error) {
             console.error('Login failed:', error.response?.data || error.message);
             isAuthenticated.value = false;
@@ -36,8 +38,14 @@ export function useAuth() {
     }
 
     // 登出方法
-    function logout() {
-        // 清除認證狀態
+    async function logout() {
+        const res = await $axios.get('/api/Account/Logout');
+        if (res.data) {
+            localStorage.removeItem('token'); // 如果使用 localStorage 儲存 JWT token
+            router.push('/login');
+    
+        }
+       
         isAuthenticated.value = false;
         localStorage.removeItem('authToken');
         // 可以發送請求到後端進行登出處理

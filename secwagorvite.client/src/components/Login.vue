@@ -40,6 +40,7 @@
     import router from "@/router";
     import { useRouter } from 'vue-router';
     import { useAuth } from '@/composables/useAuth'; // 自訂的認證處理
+    
 
     export default {
         name: 'LoginView',
@@ -80,22 +81,27 @@
                     this.errorMessage = "Please fill in all fields.";
                 } else {
                     this.errorMessage = "";
+
                     // 可以移到 useAuth.js
                     // this.$antiForgeryToken 可以直接取用
+                    const auth = useAuth();
+                    auth.login(this.datas);
+
+                    /*const router = useRouter();
                     const res = await $axios.post("/api/Account/Login", this.datas, {
                         headers: {
                             'RequestVerificationToken': this.$antiForgeryToken
                         }
                     });
                     if (res.data) {
-                        const auth = useAuth();
+                        
                         auth.setAuthenticated(true); 
                         //console.log(auth.isAuthenticated())
                         //this.$router.push(this.$route.query.redirect || '/');
-                        this.gotoEntryrecord();
+                        router.push('/login/entryrecord');
                     } else {
                         this.errorMessage = "登入失敗.";
-                    }
+                    }*/
                 }
             },
             async getCampusInfo() {
@@ -105,27 +111,16 @@
             },
             async logout() {
                 try {
-                // 發送登出請求到後端
-                await $axios.get('/api/Account/Logout');
+                    await $axios.get('/api/Account/Logout');
 
-                // 清除本地存儲的 token 或用戶信息
-                localStorage.removeItem('token'); // 如果使用 localStorage 儲存 JWT token
+                    localStorage.removeItem('token'); // 如果使用 localStorage 儲存 JWT token
                     router.push('/login');
                 } catch (error) {
                     console.error("Logout failed", error);
                 }
             }
         },
-        setup() {
-            const router = useRouter();
-            
-            function gotoEntryrecord(){
-                router.push('/login/entryrecord');
-            }
-            return {
-                gotoEntryrecord
-            }
-        }
+        
     };
 </script>
 

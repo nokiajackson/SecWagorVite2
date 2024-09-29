@@ -12,10 +12,13 @@ import moment from 'moment';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
+let globalToken = null;
+
 async function getAntiForgeryToken() {
     const response = await $axios.get('/api/Account/GetAntiForgeryToken');
-    const { token} = response.data;
-    localStorage.setItem('token', JSON.stringify(token))
+    const { token } = response.data;
+    localStorage.setItem('token', JSON.stringify(token));
+    globalToken = token; 
     return token;
 }
 
@@ -34,3 +37,4 @@ getAntiForgeryToken().then(token => {
     app.mount('#app');
 });
 
+export { globalToken };

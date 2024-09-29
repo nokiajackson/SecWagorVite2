@@ -3,8 +3,8 @@
       <nav>
         <router-link to="/">登入</router-link>
         <router-link to="/entryrecord">登記作業</router-link>
-        <router-link to="/login/Statistic">登記列表</router-link>
-        <router-link to="/api/Account/Logout">登出</router-link>
+        <router-link to="/login/Statistic">統計</router-link>
+        <router-link >登出</router-link>
       </nav>
       <main>
         <router-view />
