@@ -25,6 +25,9 @@ export function useAuth() {
 
                 // 可以存儲令牌或用戶信息到本地存儲或 cookies
                 localStorage.setItem('authToken', res.data.token);
+            } else {
+                isAuthenticated.value = false;
+                return false;
             }
         } catch (error) {
             console.error('Login failed:', error.response?.data || error.message);

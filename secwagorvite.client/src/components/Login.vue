@@ -1,5 +1,4 @@
 <template>
-    
     <div class="login-container" v-if="userIsAuthenticated">
         <div class="form-group">
                 <button type="button" @click="logout">logout</button>
@@ -33,6 +32,7 @@
             </div>
         </div>
     </div>
+    <router-view />
 </template>
 
 <script>
@@ -91,8 +91,8 @@
                         const auth = useAuth();
                         auth.setAuthenticated(true); 
                         //console.log(auth.isAuthenticated())
-                        this.$router.push(this.$route.query.redirect || '/');
-                        //this.gotoEntryrecord();
+                        //this.$router.push(this.$route.query.redirect || '/');
+                        this.gotoEntryrecord();
                     } else {
                         this.errorMessage = "登入失敗.";
                     }
@@ -110,9 +110,9 @@
 
                 // 清除本地存儲的 token 或用戶信息
                 localStorage.removeItem('token'); // 如果使用 localStorage 儲存 JWT token
-                router.push('/login');
+                    router.push('/login');
                 } catch (error) {
-                console.error("Logout failed", error);
+                    console.error("Logout failed", error);
                 }
             }
         },
@@ -120,9 +120,7 @@
             const router = useRouter();
             
             function gotoEntryrecord(){
-                this.$router.push(this.$route.query.redirect || '/');
-
-                //router.push('/login/entryrecord');
+                router.push('/login/entryrecord');
             }
             return {
                 gotoEntryrecord

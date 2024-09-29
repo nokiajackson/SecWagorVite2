@@ -7,7 +7,7 @@ import SupportIcon from './icons/IconSupport.vue'
 </script>
 
 <template>
-  AAAAAA
+  建置中
   <DocumentationIcon />
   <ToolingIcon />
   <EcosystemIcon />

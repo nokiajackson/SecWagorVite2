@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '@/components/Login.vue';
 import MainLayout from '@/components/MainLayout.vue';
+import SubLayout from '@/components/SubLayout.vue';
 import EntryRecordBefore from '@/components/EntryRecordBefore.vue';
 import EntryRecordAfter from '@/components/EntryRecordAfter.vue';
 import HelloWorld from '@/components/HelloWorld.vue';
@@ -18,17 +19,22 @@ const routes = [
         children: [
             {
                 path: '',
-                name: 'Login1',
+                name: 'Login',
                 component: Login,
             },
             {
                 path: 'login',
-                name: 'Login2',
-                component: Login,
+                name: 'LoginAfter',
+                component: SubLayout,
                 children: [
                     {
                         path: 'entryrecord',
                         name: 'EntryRecordBefore',
+                        component: EntryRecordAfter,
+                    },
+                    {
+                        path: 'Statistic',
+                        name: 'EntryRecordStatistic',
                         component: EntryRecordBefore,
                     },
                 ]
@@ -59,7 +65,7 @@ router.beforeEach((to, from, next) => {
     const isAuthenticated = auth.isAuthenticated();
     if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
         //logout
-        next('/login');
+        next('/login/entryrecord');
     } else {
         //login
         next();
