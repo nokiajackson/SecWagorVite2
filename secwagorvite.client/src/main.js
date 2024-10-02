@@ -9,6 +9,9 @@ import VueAxios from 'vue-axios'
 import qs from 'qs';
 import moment from 'moment';
 
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 

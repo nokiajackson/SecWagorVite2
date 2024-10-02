@@ -38,7 +38,6 @@
 <script>
     import $axios from '@/apiClient'; 
     import router from "@/router";
-    import { useRouter } from 'vue-router';
     import { useAuth } from '@/composables/useAuth'; // 自訂的認證處理
     
 
@@ -72,6 +71,11 @@
                         console.error('Error fetching campuses:', error);
                     });
             },
+            async getCampusInfo() {
+                const res = await $axios.post(`/api/Account/GetCampusInfo`);
+                const { data } = res;
+                this.userIsAuthenticated = data.success;
+            },
             async login() {
                 if (
                     this.datas.username === "" ||
@@ -85,42 +89,20 @@
                     // 可以移到 useAuth.js
                     // this.$antiForgeryToken 可以直接取用
                     const auth = useAuth();
-                    auth.login(this.datas);
-
-                    /*const router = useRouter();
-                    const res = await $axios.post("/api/Account/Login", this.datas, {
-                        headers: {
-                            'RequestVerificationToken': this.$antiForgeryToken
-                        }
-                    });
-                    if (res.data) {
-                        
-                        auth.setAuthenticated(true); 
-                        //console.log(auth.isAuthenticated())
-                        //this.$router.push(this.$route.query.redirect || '/');
-                        router.push('/login/entryrecord');
-                    } else {
-                        this.errorMessage = "登入失敗.";
-                    }*/
+                    const data = await auth.login(this.datas);
+                    if(data?.success)
+                    {
+                        router.push('/entryrecord');
+                    }else if(data){
+                        this.errorMessage = data.message;
+                    }
                 }
-            },
-            async getCampusInfo() {
-                const res = await $axios.post(`/api/Account/GetCampusInfo`);
-                const { data } = res;
-                this.userIsAuthenticated = data.success;
             },
             async logout() {
-                try {
-                    await $axios.get('/api/Account/Logout');
-
-                    localStorage.removeItem('token'); // 如果使用 localStorage 儲存 JWT token
-                    router.push('/login');
-                } catch (error) {
-                    console.error("Logout failed", error);
-                }
+                const auth = useAuth();
+                auth.logout();
             }
         },
-        
     };
 </script>
 

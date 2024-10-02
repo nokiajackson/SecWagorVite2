@@ -1,12 +1,12 @@
 // src/composables/useAuth.js
 
 import { ref } from 'vue';
+import router from "@/router";
 import { useRouter } from 'vue-router';
 import $axios from '@/apiClient';
 import { globalToken } from '@/main'; // 引入全局 token
 
 const isAuthenticated = ref(false); // 用於表示用戶是否已登錄
-const router = useRouter();
 
 export function useAuth() {
     
@@ -14,23 +14,14 @@ export function useAuth() {
     const login = async (loginModel) =>{
         try {
             //const token = JSON.parse(localStorage.getItem('token'));
-
             const res = await $axios.post('/Api/Account/Login', loginModel, {
                 headers: {
                     'RequestVerificationToken': globalToken
                 }
             });
-            console.log(res.data)
-            // 假設登錄成功後後端返回 200 狀態
-            if (res.data) {
-                isAuthenticated.value = true;
-                router.push('/entryrecord');
-                //localStorage.setItem('authToken', res.data.token);
-            } else {
-                isAuthenticated.value = false;
-                return false;
-            }
-            return res.data;
+            const {data}=res;
+            isAuthenticated.value = data.success;
+            return data;
         } catch (error) {
             console.error('Login failed:', error.response?.data || error.message);
             isAuthenticated.value = false;
@@ -40,6 +31,7 @@ export function useAuth() {
     // 登出方法
     async function logout() {
         const res = await $axios.get('/api/Account/Logout');
+        
         if (res.data) {
             localStorage.removeItem('token'); // 如果使用 localStorage 儲存 JWT token
             router.push('/login');

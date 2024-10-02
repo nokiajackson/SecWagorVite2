@@ -3,16 +3,13 @@
         <div class="row">
             <!-- Left Column -->
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label class="form-label">校區</label>
-                    
-                    <select class="form-select" v-model="datas.campusId"  v-if="!userIsAuthenticated">
+                    <select class="form-select" v-model="datas.campusId" v-if="!userIsAuthenticated">
                         <option :value="0">請選擇校區</option>
                         <option v-for="campus in campuses" :key="campus.id" :value="campus.id">{{ campus.campusName }}</option>
                     </select>
-                    <div v-else class="form-select-text">
-                        {{ campusInfo.campusName }}
-                    </div>
+                    <div v-else class="form-select-text">{{ campusInfo.campusName }}</div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">姓名</label>
@@ -37,11 +34,10 @@
                 <div class="mb-3">
                     <label class="form-label">事由 : </label>
                     <label class="form-check form-check-inline"
-                            v-for="option in enums.purposes" :key="option.Key">
-                        <input class="form-check-input" type="radio" v-model="datas.purpose"  :value="option.key">
-                        <span class="form-check-label">{{option.name}}</span>
+                           v-for="option in enums.purposes" :key="option.Key">
+                        <input class="form-check-input" type="radio" v-model="datas.purpose" :value="option.key">
+                        <span class="form-check-label">{{ option.name }}</span>
                     </label>
-
                     <div class="form-check form-check-inline col">
                         <input type="text" class="form-control" v-model="datas.otherDescription" placeholder="其他說明">
                     </div>
@@ -58,25 +54,26 @@
                     <div class="col-6">
                         <label for="entryTime" class="form-label">入校日期</label>
                         <VueDatePicker v-model="entryTime" :format="'yyyy-MM-dd'" />
-
-                        <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTime">帶入現在時間</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" v-on:click="setCurrentDateTime">帶入現在時間</button>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6">
                         <label for="entryTime" class="form-label">入校時間</label>
                         <div class="input-group">
-                            <input type="number" class="form-control"
-                                    v-model.number="entryHour" v-on:change="combineEntryTime">
-                            <input type="number" class="form-control"
-                                    v-model.number="entryMin" v-on:change="combineEntryTime">
+                            <input type="number" class="form-control" placeholder="時" v-model.number="entryHour" v-on:change="combineEntryTime">
+                            <input type="number" class="form-control" placeholder="分" v-model.number="entryMin" v-on:change="combineEntryTime">
                         </div>
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" v-on:click="submitForm"> 送出</button>
+        </div>
+        <div class="text-end">
+            <button type="button" class="btn btn-primary" v-on:click="submitForm">送出</button>
         </div>
     </form>
-    <div class="row">
-        <table class="table table-striped border mt-2" v-if="userIsAuthenticated">
+
+    <!-- Table for authenticated users -->
+    <div class="row mt-4" v-if="userIsAuthenticated">
+        <table class="table table-striped border">
             <thead>
                 <tr>
                     <th>姓名</th>
@@ -99,26 +96,22 @@
                     <td>{{ findPurpose(log.purpose) }}</td>
                     <td>{{ log.note }}</td>
                     <td>{{ log.replacementNumber }}</td>
+                    <td><b>{{ formatDate(log.entryTime) }}</b></td>
                     <td>
-                        <b>{{ formatDate(log.entryTime) }}</b>
-                    </td>
-                    <td>
-                        <b v-if="log.exitTime">
-                            {{ formatDate(log.exitTime) }}
-                        </b>
-                        <button type="bottom" class="btn btn-danger text-white" v-else v-on:click="setExitDate(log)">
-                            紀錄離校時間
-                        </button>
+                        <b v-if="log.exitTime">{{ formatDate(log.exitTime) }}</b>
+                        <button v-else class="btn btn-danger text-white" v-on:click="setExitDate(log)">紀錄離校時間</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <!-- Modal for setting exit time -->
     <div class="modal fade" id="setExitDateDiaglog" tabindex="-1" aria-labelledby="setExitDateDiaglogLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="setExitDateDiaglogLabel">離校時間</h1>
+                    <h5 class="modal-title" id="setExitDateDiaglogLabel">離校時間</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -126,35 +119,32 @@
                         <div class="col-6">
                             <label for="exitTime" class="form-label">離校日期</label>
                             <input type="text" class="form-control" id="exitTime" v-model="exitTime" v-on:change="combineExitTime">
-                            <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="setCurrentDateTimeToExitTime">帶入現在時間</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" v-on:click="setCurrentDateTimeToExitTime">帶入現在時間</button>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6">
                             <label for="exitTime" class="form-label">離校時間</label>
                             <div class="input-group">
-                                <input type="number" class="form-control"
-                                        v-model.number="exitHour" v-on:change="combineExitTime">
-                                <input type="number" class="form-control"
-                                        v-model.number="exitMin" v-on:change="combineExitTime">
+                                <input type="number" class="form-control" placeholder="時" v-model.number="exitHour" v-on:change="combineExitTime">
+                                <input type="number" class="form-control" placeholder="分" v-model.number="exitMin" v-on:change="combineExitTime">
                             </div>
                         </div>
                     </div>
-                    @* <pre>{{entryLogsItem}}</pre> *@
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" v-on:click="submitExitForm">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" v-on:click="submitExitForm">保存變更</button>
                 </div>
             </div>
         </div>
     </div>
-    {{campusInfo}}
 </template>
+
 
 <script>
     import $axios from '@/apiClient';
     import $ from 'jquery';
-    import 'bootstrap/dist/css/bootstrap.min.css';
-    import 'bootstrap';
+    import { Modal } from 'bootstrap'
+
 
     export default {
         data() {
@@ -279,8 +269,9 @@
                 //之後再加入驗證
                 try {
                     await $axios.post(`/api/Entry/Update`, tt).then((res) => {
-                            //const { data } = res;
-                            alert('提交成功');
+                            const { data } = res;
+                            if(data.success)
+                                alert('提交成功');
                         });
                     this.searchLogList();
                 } catch (error) {
@@ -295,7 +286,10 @@
                 try {
                         await $axios.post(`/api/Entry/UpdateExitDate`, tt).then((res) => {
                             const { data } = res;
-                            console.log(data)
+                            if(data.success){
+                                var setExitDateDiaglog = new Modal(document.getElementById('setExitDateDiaglog'));
+                                setExitDateDiaglog.hide();
+                            }
                             //alert('提交成功');
                         });
                     this.searchLogList();
@@ -336,19 +330,7 @@
 
                 this.entryLogs = res.data;
             },
-            async datapickerInit() {
-                const vm = this;
-                /*
-                $('#entryTime').datepicker({
-                    format: 'yyyy-mm-dd',
-                    autoclose: true,
-                    todayHighlight: true
-                }).on('changeDate', function (e) {
-                    vm.entryTime = e.format(0, 'yyyy-mm-dd');
-                    vm.combineEntryTime()
-                });
-                */
-            },
+           
             formatDate(date) {
                 return this.$moment(date).format('YYYY-MM-DD HH:mm:ss');
             },
@@ -362,7 +344,8 @@
                 }
             },
             setExitDate(item) {
-                $('#setExitDateDiaglog').modal('show');
+                var setExitDateDiaglog = new Modal($('#setExitDateDiaglog'));
+                setExitDateDiaglog.show();
                 //需要洗過資料
                 this.entryLogsItem = Object.assign({}, item);
             },
@@ -385,4 +368,71 @@
     h1 {
         text-align: center;
     }
+    /* Form Layout Styles */
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-select, .form-control {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.form-select-text {
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Row and Column Layout */
+.row {
+    margin-top: 20px;
+}
+
+.col-md-4, .col-md-8 {
+    padding: 10px;
+}
+
+.mb-3 {
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 10px 20px;
+}
+
+.btn-outline-primary {
+    padding: 5px 10px;
+}
+
+/* Table Styles */
+.table-striped {
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table .btn-danger {
+    padding: 5px 10px;
+}
+
+/* Modal Styles */
+.modal-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.modal-footer .btn {
+    padding: 5px 15px;
+}
+
 </style>

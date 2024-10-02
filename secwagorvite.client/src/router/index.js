@@ -19,6 +19,11 @@ const routes = [
         children: [
             {
                 path: '',
+                name: 'Home',
+                component: Login,
+            },
+            {
+                path: 'login',
                 name: 'Login',
                 component: Login,
             },
@@ -65,11 +70,10 @@ router.beforeEach((to, from, next) => {
     const isAuthenticated = auth.isAuthenticated();
     if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
         //logout
-        next('/login/entryrecord');
+        next('/login');
     } else {
         //login
         next();
     }
 });
-
 export default router;

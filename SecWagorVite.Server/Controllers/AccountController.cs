@@ -93,7 +93,7 @@ public class AccountController : Controller
 
     [HttpPost("Login")]
     [ValidateAntiForgeryToken2]
-    public async Task<IActionResult> Login(LoginModelVM model)
+    public async Task<Result<string>> Login(LoginModelVM model)
     {
         //model.Captcha = captcha;
         // 驗證用戶名和密碼
@@ -128,17 +128,40 @@ public class AccountController : Controller
                 CookieAuthenticationDefaults.AuthenticationScheme, 
                 principal,
                 authProperties);
-                
+
             //ViewData["CurrentCampus"] = campus?.CampusName.ToString();
             // 先暫略過 後續再寫
 
-            return Ok("Login successful.");
+            return ResultHelper.Success<string>("Login successful.", ResultHelper.StatusCode.Send);
+            //return Ok("Login successful.");
+
         }
         else
         {
-            return Unauthorized("Invalid credentials.");
+            return ResultHelper.Failure<string>("驗證失敗!", ResultHelper.StatusCode.Get);
+            //return Unauthorized("Invalid credentials.");
         }
     }
+
+    /// <summary>
+    /// 登出
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet, HttpPost]
+    [Route("Logout")]
+    //[SwaggerResponse(200, type: typeof(Result<IActionResult>))]
+    public async Task<Result<string>> Logout()
+    {
+        // 清除 Cookies 或 Session
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //HttpContext.Session.Clear();
+
+        // 如果使用的是 Cookies 認證
+        //HttpContext.SignOutAsync();
+        //return Redirect("~/");
+        return ResultHelper.Success<string>("", ResultHelper.StatusCode.Send);
+    }
+
 
     [HttpPost("GetCampusInfo")]
     public async Task<Result<Campu>> GetCampusInfo()
@@ -165,26 +188,6 @@ public class AccountController : Controller
         return ResultHelper.Failure<Campu>("無法取得資訊!", ResultHelper.StatusCode.Get);
     }
 
-
-
-    /// <summary>
-    /// 登出
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet, HttpPost]
-    [Route("Logout")]
-    //[SwaggerResponse(200, type: typeof(Result<IActionResult>))]
-    public IActionResult Logout()
-    {
-        // 清除 Cookies 或 Session
-        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        //HttpContext.Session.Clear();
-
-        // 如果使用的是 Cookies 認證
-        //HttpContext.SignOutAsync();
-        //return Redirect("~/");
-        return Ok(new { message = "Logout successful" });
-    }
 
     
 

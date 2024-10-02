@@ -92,7 +92,6 @@ namespace SecWagorVite.Server.Service
                     return ResultHelper.Failure<EntryLogVM>("查找資料時發生錯誤: " + ex.Message, ResultHelper.StatusCode.Save);
                 }
             }
-
         }
 
 
