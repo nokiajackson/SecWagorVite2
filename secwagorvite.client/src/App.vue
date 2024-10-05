@@ -1,5 +1,5 @@
 <template>
-  <router-view class="container-xxl bd-gutter mt-3 my-md-4 bd-layout" />
+  <router-view class="Layout"/>
 </template>
 
 <script>

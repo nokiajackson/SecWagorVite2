@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <form class="bd-content ps-lg-4">
         <div class="row">
             <!-- Left Column -->
             <div class="col-md-4">

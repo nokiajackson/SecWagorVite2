@@ -14,6 +14,7 @@ export function useAuth() {
     const login = async (loginModel) =>{
         try {
             //const token = JSON.parse(localStorage.getItem('token'));
+            console.log(loginModel,globalToken)
             const res = await $axios.post('/Api/Account/Login', loginModel, {
                 headers: {
                     'RequestVerificationToken': globalToken

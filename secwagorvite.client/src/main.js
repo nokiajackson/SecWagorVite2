@@ -2,6 +2,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store';
 import './assets/main.css'
 import axios from 'axios';
 import $axios from '@/apiClient';
@@ -9,8 +10,7 @@ import VueAxios from 'vue-axios'
 import qs from 'qs';
 import moment from 'moment';
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -36,6 +36,7 @@ app.config.globalProperties.$qs = qs;
 getAntiForgeryToken().then(token => {
 
     app.config.globalProperties.$antiForgeryToken = token;
+    app.use(store); // 使用 Vuex
     app.use(router);
     app.mount('#app');
 });
