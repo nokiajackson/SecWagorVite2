@@ -43,14 +43,10 @@
       //     await auth.logout();
       // },
       ...mapActions(['logout']),  // 使用 Vuex 的 logout 方法
-      async getCampusInfo() {
-          const res = await $axios.post(`/api/Account/GetCampusInfo`);
-          const { data } = res;
-          this.userIsAuthenticated = data.success;
-      },
+      
     },
     async mounted() {
-        await this.getCampusInfo();
+        //await this.getCampusInfo();
     },
   };
   </script>

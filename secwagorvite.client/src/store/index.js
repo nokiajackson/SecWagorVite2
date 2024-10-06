@@ -1,4 +1,5 @@
 // store/index.js
+import $axios from '@/apiClient'; 
 import { createStore } from 'vuex';
 import { useAuth } from '@/composables/useAuth'; 
 
@@ -20,12 +21,19 @@ const store = createStore({
         }
     },
     actions: {
+        async getCampusInfo() {
+            const res = await $axios.post(`/api/Account/GetCampusInfo`);
+            const { data } = res;
+            return data;
+        },
         async login({ commit }, loginData) {
             const auth = useAuth();
             const data = await auth.login(loginData);
 
             if (data?.success) {
                 commit('setAuthenticated', true);
+const user = await this.getCampusInfo();
+console.log(user)
                 commit('setUser', data.user); // 假設登錄成功返回 user 信息
                 commit('setErrorMessage', "");  // 清空錯誤信息
                 return true;  // 登錄成功返回 true
@@ -37,7 +45,7 @@ const store = createStore({
         logout({ commit }) {
             const auth = useAuth();
             auth.logout();
-            
+
             commit('setAuthenticated', false);
             commit('setUser', null);
         }
