@@ -5,6 +5,7 @@
         </div>
     </div>
     <div class="login-container" v-else>
+        <img :src="logo" width="250" alt="">
         <h2>Login</h2>
         <form @submit.prevent="loginUser">
             <div class="form-group">
@@ -36,6 +37,7 @@
 import $axios from '@/apiClient';
 import { mapState, mapActions } from 'vuex';
 import router from '@/router';
+import logo from '@/assets/2023 logo 1-01_0.png'; // 使用相对路径导入图片
 
 
 export default {
@@ -54,6 +56,7 @@ export default {
             campuses: [],
             token: null,
             userIsAuthenticated: null,
+            logo,
         };
     },
     async mounted() {

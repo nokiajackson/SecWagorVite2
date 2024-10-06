@@ -35,6 +35,9 @@ const store = createStore({
             }
         },
         logout({ commit }) {
+            const auth = useAuth();
+            auth.logout();
+            
             commit('setAuthenticated', false);
             commit('setUser', null);
         }

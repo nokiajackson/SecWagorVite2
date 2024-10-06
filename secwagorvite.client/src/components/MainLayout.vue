@@ -5,7 +5,7 @@
         <nav class="collapse navbar-collapse">
           <router-link to="/">登入</router-link>
           <router-link to="/entryrecord" >登記作業</router-link>
-          <router-link to="/login/Statistic" v-if="userIsAuthenticated">統計</router-link>
+          <router-link to="/login/Statistic" v-if="isAuthenticated">統計</router-link>
           <a href="javascript:;"  @click="logout">登出</a>
         </nav>
       </div>
@@ -19,7 +19,6 @@
 </template>
 
 <script>
-  import { useAuth } from '@/composables/useAuth'; // 自訂的認證處理
   import $axios from '@/apiClient'; 
   import { mapState, mapActions } from 'vuex';
 
@@ -39,10 +38,11 @@
       })
     },
     methods: {
-      async logout() {
-          const auth = useAuth();
-          await auth.logout();
-      },
+      // async logout() {
+      //     const auth = useAuth();
+      //     await auth.logout();
+      // },
+      ...mapActions(['logout']),  // 使用 Vuex 的 logout 方法
       async getCampusInfo() {
           const res = await $axios.post(`/api/Account/GetCampusInfo`);
           const { data } = res;
