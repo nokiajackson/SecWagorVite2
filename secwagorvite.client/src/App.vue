@@ -1,5 +1,5 @@
 <template>
-  <router-view class="Layout"/>
+  <router-view class="container-fluid"/>
 </template>
 
 <script>

@@ -30,7 +30,6 @@
             <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
         </form>
     </div>
-    <router-view />
 </template>
 
 <script>
@@ -84,7 +83,7 @@ export default {
             } else {
                 const success = await this.login(this.datas);
                 if (success) {
-                    router.push('/entryrecord');  // 登录成功后重定向
+                    router.push('/entryrecord');  
                 }
             }
         },
@@ -102,7 +101,7 @@ export default {
 <style>
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4 !important;
     margin: 0;
     padding: 0;
     display: flex;
@@ -110,7 +109,6 @@ body {
     align-items: center;
     height: 100vh;
 }
-
 .login-container {
     background-color: #fff;
     padding: 20px;

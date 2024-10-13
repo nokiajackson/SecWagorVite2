@@ -1,13 +1,20 @@
 <template>
   <div>
-    <div class="navbar navbar-expand-md navbar-dark bd-navbar">
-      <div class="container-xxl flex-wrap flex-md-nowrap">
+    <div class="navbar navbar-expand-md navbar-dark bd-navbar shadow rounded">
+      <div class="container-xxl flex-wrap flex-md-nowrap ">
         <nav class="collapse navbar-collapse">
           <router-link to="/">登入</router-link>
           <router-link to="/entryrecord" >登記作業</router-link>
-          <router-link to="/login/Statistic" v-if="isAuthenticated">統計</router-link>
+          <router-link to="/login/list" v-if="isAuthenticated">列表</router-link>
+          <!-- <router-link to="/login/statistic" v-if="isAuthenticated">統計</router-link> -->
           <a href="javascript:;"  @click="logout">登出</a>
         </nav>
+        <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+          <li class="nav-item col-6 col-md-auto">
+            <span class="nav-link p-2 text-danger">{{CampusName}}</span>
+          </li>
+        </ul>
+
       </div>
     </div>
     <div class="container-xxl my-md-4 bd-layout">
@@ -18,23 +25,24 @@
   </div>
 </template>
 
-<script>
-  import $axios from '@/apiClient'; 
+<script setup>
   import { mapState, mapActions } from 'vuex';
 
   import 'bootstrap/dist/css/bootstrap.min.css'
   import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+</script>
 
+<script>
   export default {
     name: 'MainLayout',
     data() {
         return {
-          userIsAuthenticated:null,
         };
     },
     computed: {
       ...mapState({
-        isAuthenticated: state => state.isAuthenticated // 獲取認證狀態
+        isAuthenticated: state => state.isAuthenticated, // 獲取認證狀態
+        CampusName : state => state.campusName, 
       })
     },
     methods: {

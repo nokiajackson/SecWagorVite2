@@ -26,6 +26,7 @@ async function getAntiForgeryToken() {
 }
 
 
+//App.components= { VueDatePicker }
 const app = createApp(App);
 app.use(VueAxios, axios)
 app.component('VueDatePicker', VueDatePicker);

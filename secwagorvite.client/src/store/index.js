@@ -7,18 +7,14 @@ const store = createStore({
     state: {
         isAuthenticated: false,  // 認證狀態
         user: null,              // 用戶信息
+        campusName: "",          // 校區
         errorMessage: ""         // 錯誤信息
     },
     mutations: {
-        setAuthenticated(state, value) {
-            state.isAuthenticated = value;
-        },
-        setUser(state, user) {
-            state.user = user;
-        },
-        setErrorMessage(state, message) {
-            state.errorMessage = message;
-        }
+        setAuthenticated(state, val) { state.isAuthenticated = val; },
+        setUser(state, val) { state.user = val; },
+        setCampusName(state, val) { state.campusName = val; },
+        setErrorMessage(state, val) { state.errorMessage = val; },
     },
     actions: {
         async getCampusInfo() {
@@ -26,20 +22,21 @@ const store = createStore({
             const { data } = res;
             return data;
         },
-        async login({ commit }, loginData) {
+        async login({ commit,dispatch }, loginData) {
             const auth = useAuth();
             const data = await auth.login(loginData);
 
             if (data?.success) {
                 commit('setAuthenticated', true);
-const user = await this.getCampusInfo();
-console.log(user)
-                commit('setUser', data.user); // 假設登錄成功返回 user 信息
-                commit('setErrorMessage', "");  // 清空錯誤信息
-                return true;  // 登錄成功返回 true
+                const user = await dispatch('getCampusInfo');//透過 dispatch 呼叫 getCampusInfo 這方法
+                //console.log(user.data)
+                commit('setUser', data.user); 
+                commit('setCampusName', user.data.campusName); 
+                commit('setErrorMessage', "");  
+                return true;  
             } else if (data) {
-                commit('setErrorMessage', data.message);  // 設置錯誤信息
-                return false;  // 登錄失敗返回 false
+                commit('setErrorMessage', data.message);  
+                return false;  
             }
         },
         logout({ commit }) {
@@ -48,6 +45,7 @@ console.log(user)
 
             commit('setAuthenticated', false);
             commit('setUser', null);
+            commit('setCampusName', null);
         }
     },
     getters: {
