@@ -48,6 +48,7 @@
             <div class="row mb-3">
                 <div class="col-md-12 text-center">
                     <button type="button" class="btn btn-info text-white" v-on:click="searchLogList">搜索</button>
+                    <!-- <button class="btn" type="button" v-on:click="setExitDateDiaglogToggle">toggle</button> -->
                 </div>
             </div>
     </form>
@@ -237,6 +238,12 @@
                     //alert('提交失敗');
                 }
             },
+            setExitDateDiaglogToggle(){
+                this.exitDateDiaglog.show();
+            },
+            setExitDateDiaglogHide(){
+                this.exitDateDiaglog.hide();
+            }
         }
     }
 </script>

@@ -68,6 +68,7 @@
         </div>
         <div class="text-end">
             <button type="button" class="btn btn-primary" v-on:click="submitForm">送出</button>
+            <!-- <button class="btn" type="button" v-on:click="setExitDateDiaglogToggle">toggle</button> -->
         </div>
     </form>
 
@@ -107,7 +108,7 @@
     </div>
 
     <!-- Modal for setting exit time -->
-    <div class="modal fade" id="setExitDateDiaglog" tabindex="-1" aria-labelledby="setExitDateDiaglogLabel" aria-hidden="true">
+    <div class="modal fade" ref="setExitDateDiaglog" tabindex="-1" aria-labelledby="setExitDateDiaglogLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -133,6 +134,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" v-on:click="submitExitForm">保存變更</button>
+                    <!-- <button class="btn" type="button" v-on:click="setExitDateDiaglogHide">toggle</button> -->
                 </div>
             </div>
         </div>
@@ -149,6 +151,7 @@
     export default {
         data() {
             return {
+                exitDateDiaglog:{},
                 toast_msg: '',//系統訊息固定 #liveToast
                 userIsAuthenticated: true, //用頁面判斷是否為登入
                 enums: {
@@ -197,6 +200,7 @@
             if (this.userIsAuthenticated) {
                 await this.searchLogList();
             }
+            this.exitDateDiaglog = new Modal(this.$refs.setExitDateDiaglog);
         },
         watch: {
             'entryHour': function (newVal) {
@@ -287,8 +291,7 @@
                         await $axios.post(`/api/Entry/UpdateExitDate`, tt).then((res) => {
                             const { data } = res;
                             if(data.success){
-                                var setExitDateDiaglog = new Modal(document.getElementById('setExitDateDiaglog'));
-                                setExitDateDiaglog.hide();
+                                this.exitDateDiaglog.hide();
                             }
                             //alert('提交成功');
                         });
@@ -330,7 +333,6 @@
 
                 this.entryLogs = res.data;
             },
-           
             formatDate(date) {
                 return this.$moment(date).format('YYYY-MM-DD HH:mm:ss');
             },
@@ -344,11 +346,16 @@
                 }
             },
             setExitDate(item) {
-                var setExitDateDiaglog = new Modal($('#setExitDateDiaglog'));
-                setExitDateDiaglog.show();
+                this.exitDateDiaglog.show();
                 //需要洗過資料
                 this.entryLogsItem = Object.assign({}, item);
             },
+            setExitDateDiaglogToggle(){
+                this.exitDateDiaglog.show();
+            },
+            setExitDateDiaglogHide(){
+                this.exitDateDiaglog.hide();
+            }
         }
     };
 </script>
