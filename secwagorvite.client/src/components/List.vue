@@ -89,7 +89,7 @@
         </tbody>
     </table>
     <!-- Modal for setting exit time -->
-    <div class="modal fade" id="setExitDateDiaglog" tabindex="-1" aria-labelledby="setExitDateDiaglogLabel" aria-hidden="true">
+    <div class="modal fade" ref="setExitDateDiaglog" tabindex="-1" aria-labelledby="setExitDateDiaglogLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -123,13 +123,13 @@
 
 <script>
     import $axios from '@/apiClient';
-    import $ from 'jquery';
+    //import $ from 'jquery';
     import { Modal } from 'bootstrap'
     
     export default {
         data(){
             return {
-                //setExitDateDiaglog:null,
+                exitDateDiaglog:{},
                 toast_msg: '',//系統訊息固定 #liveToast
                 userIsAuthenticated: true, //用頁面判斷是否為登入
                 enums: {
@@ -161,6 +161,7 @@
             //this.setExitDateDiaglog = new Modal(document.getElementById('setExitDateDiaglog'));
             await this.fetchEnum();
             this.setParams();
+            this.exitDateDiaglog = new Modal(this.$refs.setExitDateDiaglog);
          },
          watch:{
          
@@ -207,8 +208,7 @@
                 }
             },
             setExitDate(item) {
-                var setExitDateDiaglog = new Modal($('#setExitDateDiaglog'));
-                setExitDateDiaglog.show();
+                this.exitDateDiaglog.show();
                 //需要洗過資料
                 this.entryLogsItem = Object.assign({}, item);
             },
@@ -227,9 +227,7 @@
                         await $axios.post(`/api/Entry/UpdateExitDate`, tt).then((res) => {
                             const { data } = res;
                             if(data.success){
-                                //var setExitDateDiaglog = new Modal(document.getElementById('setExitDateDiaglog'));
-                                var setExitDateDiaglog = new Modal($('#setExitDateDiaglog'));
-                                setExitDateDiaglog.hide();
+                                this.exitDateDiaglog.hide();
                             }
                             //alert('提交成功');
                         });
