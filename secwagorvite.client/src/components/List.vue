@@ -26,19 +26,19 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-3">
-                    <label>進場時間開始</label>
+                    <label>入校時間開始</label>
                     <VueDatePicker v-model="params.EntryTimeStart" :format="'yyyy-MM-dd hh:mm'" />
                 </div>
                 <div class="col-md-3">
-                    <label>進場時間結束</label>
+                    <label>入校時間結束</label>
                     <VueDatePicker v-model="params.EntryTimeEnd" :format="'yyyy-MM-dd hh:mm'" />
                 </div>
                 <div class="col-md-3">
-                    <label>出場時間開始</label>
+                    <label>出校時間開始</label>
                     <VueDatePicker v-model="params.ExitTimeStart" :format="'yyyy-MM-dd hh:mm'" />
                 </div>
                 <div class="col-md-3">
-                    <label>出場時間結束</label>
+                    <label>出校時間結束</label>
                     <VueDatePicker v-model="params.ExitTimeEnd" :format="'yyyy-MM-dd hh:mm'" />
                 </div>
             </div>
