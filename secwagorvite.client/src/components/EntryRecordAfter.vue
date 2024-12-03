@@ -2,7 +2,7 @@
     <form class="bd-content ps-lg-4">
         <div class="row">
             <!-- Left Column -->
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div class="form-group mb-3">
                     <label class="form-label">校區</label>
                     <select class="form-select" v-model="datas.campusId" v-if="!userIsAuthenticated">
@@ -30,7 +30,7 @@
             </div>
 
             <!-- Right Column -->
-            <div class="col-md-8">
+            <div class="col-sm-8">
                 <div class="mb-3">
                     <label class="form-label">事由 : </label>
                     <label class="form-check form-check-inline"
