@@ -1,23 +1,23 @@
 <template>
     <div class="login-container" v-if="userIsAuthenticated">
         <div class="form-group">
-            <button type="button" @click="logout">logout</button>
+            <button type="button" class="text-black" @click="logout">logout</button>
         </div>
     </div>
     <div class="login-container" v-else>
         <img :src="logo" width="250" alt="">
-        <h2>Login</h2>
+        <h2 class='text-black safari_only' >Login</h2>
         <form @submit.prevent="loginUser">
             <div class="form-group">
-                <label for="username">Username</label>
+                <label for="username" class='text-black safari_only' >Username</label>
                 <input type="text" id="username" v-model="datas.username" required />
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password" class='text-black' safari_only >Password</label>
                 <input type="password" id="password" v-model="datas.password" required />
             </div>
             <div class="form-group">
-                <label for="campusDropdown">Campus</label>
+                <label for="campusDropdown"  class='text-black safari_only' >Campus</label>
                 <select class="form-control" id="campusDropdown" v-model="datas.campus">
                     <option v-for="campus in campuses" :key="campus" :value="campus.id">
                         {{ campus.campusName }}
@@ -37,7 +37,6 @@ import $axios from '@/apiClient';
 import { mapState, mapActions } from 'vuex';
 import router from '@/router';
 import logo from '@/assets/2023 logo 1-01_0.png'; // 使用相对路径导入图片
-
 
 export default {
     name: 'LoginView',

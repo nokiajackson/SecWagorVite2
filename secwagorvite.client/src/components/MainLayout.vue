@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div class="navbar navbar-expand-md navbar-dark bd-navbar shadow rounded">
-      <div class="container-xxl flex-wrap flex-md-nowrap ">
+    <div class="navbar navbar-expand-sm navbar-dark bd-navbar shadow rounded">
+      <div class="container-fluid flex-wrap flex-md-nowrap ">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
         <nav class="collapse navbar-collapse">
-          <router-link to="/" v-if="!userIsAuthenticated">登入</router-link>
+          <router-link to="/" v-if="!isAuthenticated">登入</router-link>
           <router-link to="/entryrecord" >登記作業</router-link>
-          <router-link to="/login/list" v-if="userIsAuthenticated">列表</router-link>
+          <router-link to="/login/list" v-if="isAuthenticated">列表</router-link>
           <!-- <router-link to="/login/statistic" v-if="isAuthenticated">統計</router-link> -->
-          <a href="javascript:;"  v-if="userIsAuthenticated" @click="logout">登出</a>
+          <a href="javascript:;"  v-if="isAuthenticated" @click="logout">登出</a>
+          <span class="navbar-text d-flex text-right p-2 text-danger">{{CampusName}}</span>
         </nav>
-        <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
-          <li class="nav-item col-6 col-md-auto">
-            <span class="nav-link p-2 text-danger">{{CampusName}}</span>
-          </li>
-        </ul>
+        
       </div>
     </div>
     <div class="container-xxl my-md-4 bd-layout">
@@ -27,9 +27,10 @@
 <script setup>
   import { mapState, mapActions } from 'vuex';
   import $axios from '@/apiClient';
+  
+  import 'bootstrap/dist/css/bootstrap.min.css';
+  import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-  import 'bootstrap/dist/css/bootstrap.min.css'
-  import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 </script>
 
 <script>
