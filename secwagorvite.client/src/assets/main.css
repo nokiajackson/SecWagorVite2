@@ -22,14 +22,11 @@ a,
   padding: 3px;
 }
 /* Safari 10.1+ */
-@media not all and (min-resolution:.001dpcm) { @media {
-
-  .safari_only, .form-label { 
-
-      color:#232323; 
-
+@supports (-webkit-touch-callout: none) {
+  .safari_only,.form-check-label , .form-label { 
+    color:#232323; 
   }
-}}
+}
 
 @media (hover: hover) {
   a:hover {
