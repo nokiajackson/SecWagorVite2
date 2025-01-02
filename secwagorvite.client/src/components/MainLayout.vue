@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="container-xxl my-md-4 bd-layout">
-      <main class="bd-main order-1" >
+      <main class="bd-main order-1 overflow-auto" >
         <router-view :key="$route.fullPath"/>
       </main>
     </div>

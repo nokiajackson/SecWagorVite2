@@ -11,8 +11,8 @@ body{
   background: #f9f9f3;
   
 }
-.bd-layout{
-  padding-top: 2rem;
+.bd-main{
+  padding-top: 3rem;
 }
 a,
 .green {
@@ -22,9 +22,19 @@ a,
   padding: 3px;
 }
 /* Safari 10.1+ */
-@supports (-webkit-touch-callout: none) {
-  .safari_only,.form-check-label , .form-label { 
-    color:#232323; 
+@media only screen and (max-width: 768px) {
+  .safari_only, .form-check-label, .form-label ,
+  .form-select-text { 
+    color: #232323; 
+  }
+  .navbar-toggler{
+    background-color: #232323;
+  }
+  .cellphon_w {
+    width: 23rem;
+  }
+  .bd-main{
+    padding-top: 30rem;
   }
 }
 

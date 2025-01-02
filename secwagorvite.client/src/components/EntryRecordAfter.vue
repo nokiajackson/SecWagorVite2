@@ -73,7 +73,7 @@
     </form>
 
     <!-- Table for authenticated users -->
-    <div class="row mt-4" v-if="userIsAuthenticated">
+    <div class="row mt-4 overflow-auto cellphon_w"  v-if="userIsAuthenticated">
         <table class="table table-striped border">
             <thead>
                 <tr>
