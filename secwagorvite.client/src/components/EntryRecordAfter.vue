@@ -1,151 +1,99 @@
 <template>
-    <form class="bd-content ps-lg-4">
-        <div class="row">
-            <!-- Left Column -->
-            <div class="col-sm-4">
-                <div class="form-group mb-3">
-                    <label class="form-label">校區</label>
-                    <select class="form-select" v-model="datas.campusId" v-if="!userIsAuthenticated">
-                        <option :value="0">請選擇校區</option>
-                        <option v-for="campus in campuses" :key="campus.id" :value="campus.id">{{ campus.campusName }}</option>
-                    </select>
-                    <div v-else class="form-select-text">{{ campusInfo.campusName }}</div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">姓名</label>
-                    <input type="text" class="form-control" v-model="datas.fullName">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">電話</label>
-                    <input type="text" class="form-control" v-model="$data.datas.phoneNumber">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">人數</label>
-                    <input type="number" class="form-control" v-model.number="datas.numberOfPeople">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">受訪人</label>
-                    <input type="text" class="form-control" v-model="datas.interviewee">
-                </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="col-sm-8">
-                <div class="mb-3">
-                    <label class="form-label">事由 : </label>
-                    <label class="form-check form-check-inline"
-                           v-for="option in enums.purposes" :key="option.Key">
-                        <input class="form-check-input" type="radio" v-model="datas.purpose" :value="option.key">
-                        <span class="form-check-label">{{ option.name }}</span>
-                    </label>
-                    <div class="form-check form-check-inline col">
-                        <input type="text" class="form-control" v-model="datas.otherDescription" placeholder="其他說明">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">備註</label>
-                    <textarea class="form-control" v-model="datas.note" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">換證號碼</label>
-                    <input type="text" class="form-control" v-model="datas.replacementNumber">
-                </div>
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label for="entryTime" class="form-label">入校日期</label>
-                        <VueDatePicker v-model="entryTime" :format="'yyyy-MM-dd'" />
-                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" v-on:click="setCurrentDateTime">帶入現在時間</button>
-                    </div>
-                    <div class="col-6">
-                        <label for="entryTime" class="form-label">入校時間</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" placeholder="時" v-model.number="entryHour" v-on:change="combineEntryTime">
-                            <input type="number" class="form-control" placeholder="分" v-model.number="entryMin" v-on:change="combineEntryTime">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-end">
-            <button type="button" class="btn btn-primary" v-on:click="submitForm">送出</button>
-            <!-- <button class="btn" type="button" v-on:click="setExitDateDiaglogToggle">toggle</button> -->
-        </div>
-    </form>
-
-    <!-- Table for authenticated users -->
-    <div class="row mt-4" v-if="userIsAuthenticated">
-        <table class="table table-striped border">
-            <thead>
-                <tr>
-                    <th>姓名</th>
-                    <th>電話</th>
-                    <th>人數</th>
-                    <th>受訪人</th>
-                    <th>事由</th>
-                    <th>備註</th>
-                    <th>換證號碼</th>
-                    <th>入校時間</th>
-                    <th>離校時間</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="log in entryLogs" :key="log.id">
-                    <td>{{ log.fullName }}</td>
-                    <td>{{ log.phoneNumber }}</td>
-                    <td class="text-center">{{ log.numberOfPeople }}</td>
-                    <td>{{ log.interviewee }}</td>
-                    <td>{{ findPurpose(log.purpose) }}</td>
-                    <td>{{ log.note }}</td>
-                    <td>{{ log.replacementNumber }}</td>
-                    <td><b>{{ formatDate(log.entryTime) }}</b></td>
-                    <td>
-                        <b v-if="log.exitTime">{{ formatDate(log.exitTime) }}</b>
-                        <button v-else class="btn btn-danger text-white" v-on:click="setExitDate(log)">紀錄離校時間</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Modal for setting exit time -->
-    <div class="modal fade" ref="setExitDateDiaglog" tabindex="-1" aria-labelledby="setExitDateDiaglogLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="setExitDateDiaglogLabel">離校時間</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label for="exitTime" class="form-label">離校日期</label>
-                            <input type="text" class="form-control" id="exitTime" v-model="exitTime" v-on:change="combineExitTime">
-                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" v-on:click="setCurrentDateTimeToExitTime">帶入現在時間</button>
-                        </div>
-                        <div class="col-6">
-                            <label for="exitTime" class="form-label">離校時間</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" placeholder="時" v-model.number="exitHour" v-on:change="combineExitTime">
-                                <input type="number" class="form-control" placeholder="分" v-model.number="exitMin" v-on:change="combineExitTime">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" v-on:click="submitExitForm">保存變更</button>
-                    <!-- <button class="btn" type="button" v-on:click="setExitDateDiaglogHide">toggle</button> -->
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-container fluid>
+      <v-form>
+        <v-row>
+          <v-col cols="12" md="4" sm="12">
+            <v-select v-if="!userIsAuthenticated" v-model="datas.campusId" :items="campuses" item-title="campusName" item-value="id" label="校區" outlined></v-select>
+            <v-text-field v-else v-model="campusInfo.campusName" label="校區" readonly outlined></v-text-field>
+            <v-text-field v-model="datas.fullName" label="姓名" outlined></v-text-field>
+            <v-text-field v-model="datas.phoneNumber" label="電話" outlined></v-text-field>
+            <v-text-field v-model.number="datas.numberOfPeople" label="人數" type="number" outlined></v-text-field>
+            <v-text-field v-model="datas.interviewee" label="受訪人" outlined></v-text-field>
+            <v-text-field v-model="datas.replacementNumber" label="換證號碼" outlined></v-text-field>
+            <!-- <v-radio-group v-model="datas.purpose" row label="事由" inline>
+                <v-radio v-radio v-for="option in enums.purposes" color="secondary" :key="option.Key" :label="option.name" :value="option.key"></v-radio>
+            </v-radio-group> -->
+            <v-select
+            label="事由"
+              v-model="datas.purpose"
+              :items="enums.purposes"
+              item-title="name"
+              item-value="key"
+              outlined
+              dense
+            ></v-select>
+          </v-col>
+          <v-col cols="12" md="8" sm="12">
+            <v-text-field v-model="datas.otherDescription" label="其他說明" outlined></v-text-field>
+            <v-textarea v-model="datas.note" label="備註" rows="3" outlined></v-textarea>
+            
+            <v-row>
+              <v-col cols="6">
+                <VDatePicker v-model="entryTime" mode="dateTime" label="入校日期" is-required is24hr  :masks="masks"/>
+                <v-btn color="primary" @click="setCurrentDateTime">帶入現在時間</v-btn>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model.number="entryHour" label="入校時間 (時)" type="number" outlined></v-text-field>
+                <v-text-field v-model.number="entryMin" label="入校時間 (分)" type="number" outlined></v-text-field>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+        <v-row justify="end">
+          <v-btn color="primary" @click="submitForm">送出</v-btn>
+        </v-row>
+      </v-form>
+      <v-table v-if="userIsAuthenticated" class="mt-4">
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>電話</th>
+            <th>人數</th>
+            <th>受訪人</th>
+            <th>事由</th>
+            <th>備註</th>
+            <th>換證號碼</th>
+            <th>入校時間</th>
+            <th>離校時間</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr v-for="log in entryLogs" :key="log.id">
+                <td>{{ log.fullName }}</td>
+                <td>{{ log.phoneNumber }}</td>
+                <td>{{ log.numberOfPeople }}</td>
+                <td>{{ log.interviewee }}</td>
+                <td>{{ findPurpose(log.purpose) }}</td>
+                <td>{{ log.note }}</td>
+                <td>{{ log.replacementNumber }}</td>
+                <td><b>{{ formatDate(log.entryTime) }}</b></td>
+                <td>
+                <b v-if="log.exitTime">{{ formatDate(log.exitTime) }}</b>
+                <v-btn v-else color="red" @click="setExitDate(log)">紀錄離校時間</v-btn>
+                </td>
+            </tr>
+        </tbody>
+      </v-table>
+    </v-container>
+    <v-dialog v-model="dialogVisible" max-width="500px">
+        <v-card>
+            <v-card-title>請確認離校時間</v-card-title>
+            <v-card-text>
+            <VDatePicker  v-model="exitTime" label="離校時間" type="time" outlined></VDatePicker>
+            </v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red" text @click="dialogVisible = false">取消</v-btn>
+            <v-btn color="primary" text @click="confirmExitTime">確定</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 
 <script>
     import $axios from '@/apiClient';
     import $ from 'jquery';
-    import { Modal } from 'bootstrap'
 
 
     export default {
@@ -200,7 +148,7 @@
             if (this.userIsAuthenticated) {
                 await this.searchLogList();
             }
-            this.exitDateDiaglog = new Modal(this.$refs.setExitDateDiaglog);
+            //this.exitDateDiaglog = new Modal(this.$refs.setExitDateDiaglog);
         },
         watch: {
             'entryHour': function (newVal) {
@@ -239,7 +187,7 @@
             },
             setCurrentDateTime() {
                 const now = this.$moment();
-                this.entryTime = now.format('YYYY-MM-DD');
+                this.entryTime = new Date();
                 this.entryHour = now.hour();
                 this.entryMin = now.minute();
                 this.combineEntryTime(); // 合併時間並更新 datas.entryTime

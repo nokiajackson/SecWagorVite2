@@ -125,7 +125,6 @@
 <script>
     import $axios from '@/apiClient';
     //import $ from 'jquery';
-    import { Modal } from 'bootstrap'
     
     export default {
         data(){

@@ -1,35 +1,43 @@
 <template>
-  <div>
-    <div class="navbar navbar-expand-sm navbar-dark bd-navbar shadow rounded">
-      <div class="container-fluid flex-wrap flex-md-nowrap ">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <nav class="collapse navbar-collapse">
-          <router-link to="/" v-if="!isAuthenticated">登入</router-link>
-          <router-link to="/entryrecord" >登記作業</router-link>
-          <router-link to="/login/list" v-if="isAuthenticated">列表</router-link>
-          <!-- <router-link to="/login/statistic" v-if="isAuthenticated">統計</router-link> -->
-          <a href="javascript:;"  v-if="isAuthenticated" @click="logout">登出</a>
-          <span class="navbar-text d-flex text-right p-2 text-danger">{{CampusName}}</span>
-        </nav>
-        
-      </div>
-    </div>
-    <div class="container-xxl my-md-4 bd-layout">
-      <main class="bd-main order-1" >
-        <router-view :key="$route.fullPath"/>
-      </main>
-    </div>
-  </div>
+  <v-app>
+    <v-app-bar app color="primary" flat>
+        <v-container class="d-flex align-center">
+          <v-btn icon @click="drawer = !drawer" class="d-sm-none">
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+          
+          <v-spacer></v-spacer>
+          <v-btn text to="/" v-if="!isAuthenticated">登入</v-btn>
+          <v-btn text to="/entryrecord">登記作業</v-btn>
+          <v-btn text to="/login/list" v-if="isAuthenticated">列表</v-btn>
+          <v-btn text v-if="isAuthenticated" @click="logout">登出</v-btn>
+          <span class="text-h6 ml-4 text-blue-lighten-4">{{ CampusName }}</span>
+        </v-container>
+      </v-app-bar>
+      <v-navigation-drawer v-model="drawer" app temporary>
+        <v-list>
+          <v-list-item-group>
+            <v-list-item to="/" v-if="!isAuthenticated">登入</v-list-item>
+            <v-list-item to="/entryrecord">登記作業</v-list-item>
+            <v-list-item to="/login/list" v-if="isAuthenticated">列表</v-list-item>
+            <v-list-item v-if="isAuthenticated" @click="logout">登出</v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
+      <v-main class="d-flex align-center justify-center" style="min-height: 300px; margin-top: 15rem;">
+        <v-container fluid>
+          <router-view :key="$route.fullPath" />
+        </v-container>
+      </v-main>
+
+    
+  </v-app>
 </template>
 
 <script setup>
   import { mapState, mapActions } from 'vuex';
   import $axios from '@/apiClient';
   
-  import 'bootstrap/dist/css/bootstrap.min.css';
-  import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 </script>
 

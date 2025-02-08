@@ -1,42 +1,64 @@
 <template>
-    <div class="login-container" v-if="userIsAuthenticated">
-        <div class="form-group">
-            <button type="button" class="text-black" @click="logout">logout</button>
-        </div>
-    </div>
-    <div class="login-container" v-else>
-        <img :src="logo" width="250" alt="">
-        <h2 class='text-black safari_only' >Login</h2>
-        <form @submit.prevent="loginUser">
-            <div class="form-group">
-                <label for="username" class='text-black safari_only' >Username</label>
-                <input type="text" id="username" v-model="datas.username" required />
-            </div>
-            <div class="form-group">
-                <label for="password" class='text-black' safari_only >Password</label>
-                <input type="password" id="password" v-model="datas.password" required />
-            </div>
-            <div class="form-group">
-                <label for="campusDropdown"  class='text-black safari_only' >Campus</label>
-                <select class="form-control" id="campusDropdown" v-model="datas.campus">
-                    <option v-for="campus in campuses" :key="campus" :value="campus.id">
-                        {{ campus.campusName }}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group">
-                <button type="submit" >Login</button>
-            </div>
-            <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
-        </form>
-    </div>
-</template>
-
+    <v-container class="login-container">
+      <!-- 已登入 -->
+      <div v-if="userIsAuthenticated">
+        <v-card class="pa-4">
+          <v-btn color="primary" class="text-black" @click="logout">Logout</v-btn>
+        </v-card>
+      </div>
+  
+      <!-- 未登入 -->
+      <div v-else>
+        <v-card class="pa-4" elevation="2">
+          <v-img :src="logo" min-width="350" class="mx-auto mb-4"></v-img>
+          <v-card-title class="text-center">Login</v-card-title>
+          <v-form @submit.prevent="loginUser" ref="form">
+            <v-text-field
+              v-model="datas.username"
+              label="Username"
+              outlined
+              dense
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="datas.password"
+              label="Password"
+              type="password"
+              outlined
+              dense
+              required
+            ></v-text-field>
+            <v-select
+            label="Campus"
+              v-model="datas.campus"
+              :items="campuses"
+              item-title="campusName"
+              item-value="id"
+              outlined
+              dense
+            ></v-select>
+            <v-btn type="submit" color="primary" block class="mt-4">
+              Login
+            </v-btn>
+            <v-alert
+              v-show="errorMessage"
+              type="error"
+              outlined
+              class="mt-4"
+            >
+              {{ errorMessage }}
+            </v-alert>
+          </v-form>
+        </v-card>
+      </div>
+    </v-container>
+  </template>
+  
 <script>
 import $axios from '@/apiClient';
 import { mapState, mapActions } from 'vuex';
 import router from '@/router';
-import logo from '@/assets/2023 logo 1-01_0.png'; // 使用相对路径导入图片
+import logo from '@/assets/2023 logo 1-01_0.png'; 
 
 export default {
     name: 'LoginView',
@@ -49,7 +71,7 @@ export default {
                 username: "",
                 password: "",
                 captcha: "",
-                campus: 1,
+                campus: { "id": 1, "campusName": "北屯校區" },
             },
             campuses: [],
             token: null,
@@ -65,7 +87,7 @@ export default {
         getCampuses() {
             $axios.get('/api/Account/GetAllCampuses')
                 .then((res) => {
-                    this.campuses = res.data;
+                  this.campuses = res.data.map(({ id, campusName }) => ({ id, campusName }));
                 })
                 .catch((error) => {
                     console.error('Error fetching campuses:', error);
