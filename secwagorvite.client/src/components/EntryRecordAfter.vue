@@ -1,6 +1,6 @@
 <template>
-    <v-container fluid>
-      <v-form>
+    <v-container fluid >
+      <v-form style=" margin-top: 10rem;">
         <v-row>
           <v-col cols="12" md="4" sm="12">
             <v-select v-if="!userIsAuthenticated" v-model="datas.campusId" :items="campuses" item-title="campusName" item-value="id" label="校區" outlined></v-select>
@@ -83,8 +83,11 @@
             </v-card-text>
             <v-card-actions>
             <v-spacer></v-spacer>
+            <v-text-field v-model.number="exitHour" label="離校時間 (時)" type="number" outlined></v-text-field>
+            <v-text-field v-model.number="exitMin" label="離校時間 (分)" type="number" outlined></v-text-field>
+            <v-btn color="primary" @click="setCurrentDateTimeToExitTime">帶入現在時間</v-btn>
             <v-btn color="red" text @click="dialogVisible = false">取消</v-btn>
-            <v-btn color="primary" text @click="confirmExitTime">確定</v-btn>
+            <v-btn color="primary" text @click="setExitDateDiaglogHide">確定</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -99,7 +102,7 @@
     export default {
         data() {
             return {
-                exitDateDiaglog:{},
+                dialogVisible: false,
                 toast_msg: '',//系統訊息固定 #liveToast
                 userIsAuthenticated: true, //用頁面判斷是否為登入
                 enums: {
@@ -200,16 +203,26 @@
                 this.combineExitTime(); // 合併時間並更新 datas.exitTime
             },
             combineEntryTime() {
+                const entryDate = this.$moment(this.entryTime).format('YYYY-MM-DD');
+                const combinedTime = `${entryDate} ${String(this.entryHour).padStart(2, '0')}:${String(this.entryMin).padStart(2, '0')}:00`;
                 if (this.entryTime) {
-                    const combinedTime = `${this.entryTime} ${String(this.entryHour).padStart(2, '0')}:${String(this.entryMin).padStart(2, '0')}:00`;
-                    this.datas.entryTime = this.$moment(combinedTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
+                   // this.datas.entryTime = combinedTime;
+                   const parsedTime = this.$moment(combinedTime, 'YYYY-MM-DD HH:mm:ss', true);
+                    
+                    // 確保解析成功
+                    if (parsedTime.isValid()) {
+                        this.datas.entryTime = parsedTime.format('YYYY-MM-DDTHH:mm:ss');
+                    } else {
+                        console.error('解析失敗: combinedTime 格式錯誤', combinedTime);
+                    }
                 } else {
                     this.datas.entryTime = null;
                 }
             },
             combineExitTime() {
                 if (this.exitTime) {
-                    const combinedTime = `${this.exitTime} ${String(this.exitHour).padStart(2, '0')}:${String(this.exitMin).padStart(2, '0')}:00`;
+                    const exitTime = this.$moment(this.exitTime).format('YYYY-MM-DD');
+                    const combinedTime = `${exitTime} ${String(this.exitHour).padStart(2, '0')}:${String(this.exitMin).padStart(2, '0')}:00`;
                     this.entryLogsItem.exitTime = this.$moment(combinedTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
                 } else {
                     this.entryLogsItem.exitTime = null;
@@ -217,7 +230,7 @@
             },
             async submitForm() {
                 const tt = JSON.parse(JSON.stringify(this.datas));
-                // console.log(`/api/Entry/Update`, JSON.stringify(this.datas))
+                 //console.log(`/api/Entry/Update`, JSON.stringify(this.datas))
                 //之後再加入驗證
                 try {
                     await $axios.post(`/api/Entry/Update`, tt).then((res) => {
@@ -294,15 +307,16 @@
                 }
             },
             setExitDate(item) {
-                this.exitDateDiaglog.show();
+                this.dialogVisible=true;
                 //需要洗過資料
                 this.entryLogsItem = Object.assign({}, item);
+                
             },
             setExitDateDiaglogToggle(){
-                this.exitDateDiaglog.show();
+                this.dialogVisible=true;
             },
             setExitDateDiaglogHide(){
-                this.exitDateDiaglog.hide();
+                this.dialogVisible=false;
             }
         }
     };

@@ -24,13 +24,11 @@
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-      <v-main class="d-flex align-center justify-center" style="min-height: 300px; margin-top: 15rem;">
+      <v-main class="d-flex align-center justify-center" >
         <v-container fluid>
           <router-view :key="$route.fullPath" />
         </v-container>
       </v-main>
-
-    
   </v-app>
 </template>
 
